@@ -5,31 +5,47 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FBFBFB"
+    android:backgroundTint="#211B1B"
     tools:context=".MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:id="@+id/textView"
+        android:layout_width="125dp"
+        android:layout_height="51dp"
+        android:text="CarFix"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.012"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.018" />
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="399dp" />
+        android:layout_width="372dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#FBAF6B"
+        android:text="Поиск по истории"
+        android:textColor="#0B0B0B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="462dp" />
+        android:layout_width="373dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="676dp"
+        android:backgroundTint="#F6AD6D"
+        android:text="Введите номер автомобиля"
+        android:textColor="#FA020202"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
