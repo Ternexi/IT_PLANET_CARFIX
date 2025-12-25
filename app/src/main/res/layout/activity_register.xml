@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background"
+    tools:context=".RegisterActivity">
+
+
+    <!-- Заголовок "Create Account" -->
+
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginBottom="8dp"
+        android:src="@mipmap/car_fix_logo_black2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.902"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="80dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Создать "
+        android:textColor="@color/dark_text_primary"
+        android:textSize="32sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!-- Поле для ввода Имени -->
+
+    <!-- Поле для ввода Email -->
+
+    <!-- Поле для ввода Пароля -->
+
+    <TextView
+        android:id="@+id/titleTextAccent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="Аккаунт"
+        android:textColor="@color/dark_accent_orange"
+        android:textSize="32sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/titleText"
+        app:layout_constraintStart_toEndOf="@id/titleText" />
+
+    <EditText
+        android:id="@+id/fullnameEditText"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="108dp"
+        android:background="@drawable/shape_dark_input_field"
+        android:drawablePadding="12dp"
+        android:drawableTint="@color/dark_text_secondary"
+        android:hint="Имя"
+        android:inputType="textPersonName"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/dark_text_primary"
+        android:textColorHint="@color/dark_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextAccent" />
+
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shape_dark_input_field"
+        android:drawablePadding="12dp"
+        android:drawableTint="@color/dark_text_secondary"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/dark_text_primary"
+        android:textColorHint="@color/dark_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fullnameEditText" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_dark_input_field"
+        android:drawablePadding="12dp"
+        android:drawableTint="@color/dark_text_secondary"
+        android:hint="Пароль"
+        android:inputType="textPassword"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/dark_text_primary"
+        android:textColorHint="@color/dark_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailEditText"
+        android:layout_marginHorizontal="24dp"/>
+
+    <!-- Кнопка "Continue" -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/continueButton"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/shape_orange_button"
+        android:text="Продолжить"
+        android:textAllCaps="false"
+        android:textColor="@color/dark_text_primary"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/passwordEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="24dp"/>
+
+    <!-- Текст "Already have an account? Log in" -->
+    <Button
+        android:id="@+id/signInText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:background="@android:color/transparent"          android:text="Уже есть аккаунт? Войти"
+        android:textColor="@color/dark_text_secondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

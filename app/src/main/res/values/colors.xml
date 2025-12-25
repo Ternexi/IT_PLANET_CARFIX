@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray_disabled">#757575</color>
+    <color name="dark_background">#0C0C0C</color> <!-- Почти черный фон -->
+    <color name="dark_surface">#1F1F1F</color> <!-- Цвет полей ввода и кнопок соц. сетей -->
+    <color name="dark_accent_orange">#FFA726</color>
+    <color name="dark_text_secondary">#AFAFAF</color>
+    <color name="dark_text_primary">#FFFFFF</color>
 </resources>

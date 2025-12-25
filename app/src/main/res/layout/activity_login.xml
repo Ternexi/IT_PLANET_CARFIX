@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:src="@mipmap/car_fix_logo_black2"
+        app:layout_constraintBottom_toTopOf="@+id/logoText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <!-- Заголовок "Sign In" -->
+
+    <TextView
+        android:id="@+id/logoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="148dp"
+        android:text="CarFix"
+        android:textColor="@color/dark_text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Вход"
+        android:textColor="@color/dark_text_primary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logoText" />
+
+    <!-- Кнопка "Войти с Google" (пока просто верстка) -->
+    <TextView
+        android:id="@+id/googleSignInButton"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/shape_dark_input_field"
+        android:drawablePadding="16dp"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="Войти с помощью Google"
+        android:textColor="@color/dark_text_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        android:layout_marginHorizontal="24dp"/>
+
+    <!-- Кнопка "Войти с Apple" (пока просто верстка) -->
+    <TextView
+        android:id="@+id/appleSignInButton"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_dark_input_field"
+        android:drawablePadding="16dp"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="Войти с помощью Apple"
+        android:textColor="@color/dark_text_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/googleSignInButton"
+        android:layout_marginHorizontal="24dp"/>
+
+    <!-- Заголовок "Email address" -->
+    <TextView
+        android:id="@+id/emailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="Адрес электронной почты"
+        android:textColor="@color/dark_text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/emailEditText"
+        app:layout_constraintTop_toBottomOf="@id/appleSignInButton" />
+
+    <!-- Поле для ввода Email -->
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/shape_dark_input_field"
+        android:drawableStart="@android:drawable/ic_dialog_email"
+        android:drawablePadding="12dp"
+        android:drawableTint="@color/dark_text_secondary"
+        android:hint="Введите ваш email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/dark_text_primary"
+        android:textColorHint="@color/dark_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailLabel"
+        android:layout_marginHorizontal="24dp"/>
+
+    <!-- Заголовок "Password" -->
+    <TextView
+        android:id="@+id/passwordLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Пароль"
+        android:textColor="@color/dark_text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/passwordEditText"
+        app:layout_constraintTop_toBottomOf="@id/emailEditText" />
+
+    <!-- Поле для ввода Пароля -->
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/shape_dark_input_field"
+        android:drawableStart="@android:drawable/ic_lock_lock"
+        android:drawablePadding="12dp"
+        android:drawableTint="@color/dark_text_secondary"
+        android:hint="••••••••"
+        android:inputType="textPassword"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/dark_text_primary"
+        android:textColorHint="@color/dark_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordLabel"
+        android:layout_marginHorizontal="24dp"/>
+
+    <!-- Кнопка "Sign In" -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/signInButton"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/shape_orange_button"
+        android:text="Войти"
+        android:textAllCaps="false"
+        android:textColor="@color/dark_text_primary"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/signUpText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="24dp"/>
+
+    <!-- Текст "Don't have an account? Sign Up" -->
+    <Button
+        android:id="@+id/signUpText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:background="@android:color/transparent"
+        android:text="Нет аккаунта? Зарегистрироваться"
+        android:textColor="@color/dark_text_secondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

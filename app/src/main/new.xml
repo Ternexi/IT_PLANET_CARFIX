@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/main"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#000000" tools:context=".MainActivity">
+
+    <!-- Заголовок -->
+    <TextView android:id="@+id/textView" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp" android:text="CarFix" android:textColor="#FFFFFF"
+        android:textSize="34sp" android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Кнопка настроек -->
+    <ImageButton android:id="@+id/settings_buton" android:layout_width="48dp"
+        android:layout_height="48dp" android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_settings" app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="@+id/textView"
+        app:tint="@color/white" tools:ignore="ContentDescription" />
+
+    <!-- Модель машины (основа для полей ввода) -->
+    <ImageButton android:id="@+id/car_model_button" android:layout_width="0dp"
+        android:layout_height="0dp" android:background="#00FFFFFF" android:scaleType="fitCenter"
+        android:src="@drawable/car_model" app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHeight_percent="0.7"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.9" tools:ignore="ContentDescription" />
+
+    <!-- ПРИМЕР: Поле для ввода на капоте.
+         Оно привязано к границам car_model_button, а не к экрану.
+         Так оно всегда будет на своем месте относительно машины. -->
+    <com.google.android.material.textfield.TextInputEditText android:id="@+id/capot_input"
+        android:layout_width="0dp" android:layout_height="0dp" android:background="#33FF0000"
+        android:gravity="center" android:hint="Капот" android:inputType="number"
+        android:textColor="#FFFFFF" android:textColorHint="#99FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/car_model_button"
+        app:layout_constraintEnd_toEndOf="@+id/car_model_button"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintStart_toStartOf="@+id/car_model_button"
+        app:layout_constraintTop_toTopOf="@+id/car_model_button"
+        app:layout_constraintVertical_bias="0.25" app:layout_constraintWidth_percent="0.3" />
+
+    <!-- Другие поля ввода (добавляй по аналогии с capot_input) -->
+    <!--
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/lobovoe_input"
+        ...
+        app:layout_constraintTop_toTopOf="@+id/car_model_button"
+        app:layout_constraintBottom_toBottomOf="@+id/car_model_button"
+        app:layout_constraintStart_toStartOf="@+id/car_model_button"
+        app:layout_constraintEnd_toEndOf="@+id/car_model_button"
+        ... />
+    -->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
