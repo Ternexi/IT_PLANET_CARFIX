@@ -5,143 +5,98 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.Toast
-import androidx.core.text.HtmlCompat
 import com.example.carfixapplication.databinding.ActivityPremiumBinding
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
 class PremiumActivity : AppCompatActivity() {
 
-
     private lateinit var binding: ActivityPremiumBinding
-    private val TAG = "PremiumActivity" // Тэг для логирования
-    private val client = OkHttpClient() // Создаем OkHttpClient один раз
+    // Тэг для удобного поиска логов
+    private val TAG = "PremiumActivity"
+    // Создаем OkHttpClient один раз, чтобы переиспользовать его для всех запросов
+    private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        // Инициализируем ViewBinding
         binding = ActivityPremiumBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val htmlString = getString(R.string.premium_benefits_list)
+        // обработчик клика на нижнюю кнопку "Подключить"
+        setupConnectButton()
+    }
 
-        // 2. Парсим HTML и преобразуем его в форматируемый текст (Spanned)
-        val formattedText = HtmlCompat.fromHtml(
-            htmlString,
-            HtmlCompat.FROM_HTML_MODE_LEGACY
-        )
-
-        // 3. Устанавливаем форматированный текст в TextView
-        binding.textView2.text = formattedText
-
-        // ID кнопок в коде теперь совпадают с XML: btnMonth и btnHalfYear
-        binding.btnMonth.setOnClickListener {
-            // TODO: Замените userId=1 на реальный ID текущего пользователя
-            sendPayment(userId = 1, durationDays = 30)
-        }
-
-        binding.btnHalfYear.setOnClickListener {
-            // TODO: Замените userId=1 на реальный ID текущего пользователя
-            sendPayment(userId = 1, durationDays = 183)
-        }
-            val buttonClick = findViewById<Button>(R.id.back_button_premium)
-            buttonClick.setOnClickListener {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-
+    private fun setupConnectButton() {
+        binding.connectButton.setOnClickListener {
+            // TODO: Реализуйте логику выбора между 30 и 183 днями.
+            // TODO: Замените userId=1 на реальный ID текущего пользователя.
+            sendPaymentRequest(userId = 1, durationDays = 30)
         }
     }
 
-    private fun sendPayment(userId: Int, durationDays: Int) {
-
-        val url = "http://192.168.31.238:3000/create-payment/$userId" // Эмулятор Android
+    private fun sendPaymentRequest(userId: Int, durationDays: Int) {
+        // IP-адрес для доступа к локальному серверу с эмулятора Android.
+        val url = "http://10.0.2.2:3000/create-payment/$userId"
         Log.d(TAG, "Отправка запроса на $url для подписки на $durationDays дней")
 
+        // Тело запроса в формате JSON
         val json = JSONObject()
         json.put("durationDays", durationDays)
+        val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
 
-        val body = json.toString()
-            .toRequestBody("application/json".toMediaType())
-
+        // Сам запрос
         val request = Request.Builder()
             .url(url)
-            .post(body)
+            .post(requestBody)
             .build()
 
+        // Выполняем запрос асинхронно, чтобы не блокировать основной поток приложения
         client.newCall(request).enqueue(object : Callback {
-
             override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, "Ошибка OkHttp: ${e.message}", e) // Логирование ошибки
+                Log.e(TAG, "Сетевая ошибка OkHttp: ${e.message}", e)
                 runOnUiThread {
-                    Toast.makeText(
-                        this@PremiumActivity,
-                        "Ошибка подключения: ${e.message}",
-                        Toast.LENGTH_LONG // Увеличил время показа для критических ошибок
-                    ).show()
+                    Toast.makeText(this@PremiumActivity, "Ошибка сети. Проверьте подключение.", Toast.LENGTH_LONG).show()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                // Всегда используйте .use { ... } для тела ответа, чтобы убедиться, что он закрыт
-                response.body.use { body ->
+                response.body?.use { responseBody ->
+                    val serverText = responseBody.string()
+
+                    // Если ответ от сервера неуспешный (код не 2xx)
                     if (!response.isSuccessful) {
-                        Log.e(TAG, "Сервер вернул ошибку: ${response.code}. Тело: ${body?.string()}")
+                        Log.e(TAG, "Ошибка сервера: ${response.code}, Тело: $serverText")
                         runOnUiThread {
-                            Toast.makeText(
-                                this@PremiumActivity,
-                                "Ошибка сервера: ${response.code}",
-                                Toast.LENGTH_LONG
-                            ).show()
+                            Toast.makeText(this@PremiumActivity, "Ошибка сервера: ${response.code}", Toast.LENGTH_LONG).show()
                         }
                         return
                     }
 
-                    val serverText = body?.string()
-                    Log.d(TAG, "Ответ сервера: $serverText")
-
-                    if (serverText.isNullOrEmpty()) {
-                        runOnUiThread {
-                            Toast.makeText(
-                                this@PremiumActivity,
-                                "Пустой или некорректный ответ сервера",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        return
-                    }
+                    Log.d(TAG, "Успешный ответ от сервера: $serverText")
 
                     try {
-                        val jsonRes = JSONObject(serverText)
-                        val payUrl = jsonRes.getString("payment_url")
+                        val jsonResponse = JSONObject(serverText)
+                        val paymentUrl = jsonResponse.getString("payment_url")
 
-                        if (payUrl.isNullOrEmpty()) {
-                            Log.e(TAG, "Ответ JSON не содержит payment_url")
-                            runOnUiThread {
-                                Toast.makeText(this@PremiumActivity, "Ошибка: URL оплаты не найден.", Toast.LENGTH_LONG).show()
-                            }
-                            return
-                        }
-
+                        // Открываем браузер со ссылкой на оплату в основном потоке
                         runOnUiThread {
-                            // Открываем браузер с оплатой
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(payUrl))
-                            startActivity(intent)
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(paymentUrl))
+                            startActivity(browserIntent)
                         }
 
-                    } catch (e: Exception) {
+                    } catch (e: JSONException) {
                         Log.e(TAG, "Ошибка парсинга JSON: ${e.message}", e)
                         runOnUiThread {
-                            Toast.makeText(this@PremiumActivity, "Ошибка обработки данных сервера.", Toast.LENGTH_LONG).show()
-
+                            Toast.makeText(this@PremiumActivity, "Ошибка обработки ответа от сервера.", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
-
             }
         })
     }

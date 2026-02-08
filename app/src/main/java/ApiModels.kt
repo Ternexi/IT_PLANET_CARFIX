@@ -11,13 +11,23 @@ data class RepairItem(
     val price: Int
 ) : Parcelable
 
+// Класс для описания скрытого дефекта
+@Parcelize // <--- ДОБАВЬТЕ ЭТУ АННОТАЦИЮ
+data class HiddenDefect(
+    @SerializedName("description")
+    val description: String,
+    @SerializedName("cost")
+    val cost: Int
+) : Parcelable // <--- И УНАСЛЕДУЙТЕ ОТ PARCELABLE
+
 @Parcelize
 data class Order(
     @SerializedName("id_order") val id: Int,
     @SerializedName("car_number") val car_number: String?,
     @SerializedName("order_time") val time: String?,
     @SerializedName("order_cost") val cost: Int,
-    // ДОБАВЬ ЭТУ СТРОКУ:
+    @SerializedName("hidden_defects")
+    val hidden_defects: List<HiddenDefect>?,
     val description: String? = "Детали в разработке",
     val repair_items: List<RepairItem>?
 ) : Parcelable
@@ -43,8 +53,11 @@ data class NewOrderRequest(
     val id_car: Int,
     val id_user: Int,
     val order_cost: Int,
-    val repair_items: List<RepairItem>
-)
+    @SerializedName("hidden_defects") // Важно, чтобы имя совпадало с ожидаемым
+    val hidden_defects: List<HiddenDefect>?,
+    val repair_items: List<RepairItem>,
+
+    )
 
 // Ответ при создании заказа
 data class NewOrderResponse(

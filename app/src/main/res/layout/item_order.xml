@@ -1,20 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:orientation="vertical"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true">
 
+    <!-- Текстовое поле для НОМЕРА АВТО -->
     <TextView
-        android:id="@+id/order_info_text"
+        android:id="@+id/carNumberTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:textColor="@android:color/black"
-        android:text="Заказ №1 | Авто: A123AA | Дата: 2024-10-20" />
+        tools:text="Номер: A123AA777" />
+
+    <!-- Текстовое поле для ДАТЫ ЗАКАЗА -->
+    <TextView
+        android:id="@+id/orderDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="14sp"
+        tools:text="Дата: 20.10.2024"
+    app:layout_constraintStart_toStartOf="@+id/carNumberTextView"
+    app:layout_constraintTop_toBottomOf="@+id/carNumberTextView"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintVertical_bias="0.0"/>
+
+    <!-- Текстовое поле для СТОИМОСТИ -->
+    <TextView
+        android:id="@+id/orderCostTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        tools:text="Стоимость: 5000 руб." />
 
 </LinearLayout>

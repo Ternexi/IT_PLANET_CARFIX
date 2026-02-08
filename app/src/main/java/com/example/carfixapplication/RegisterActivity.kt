@@ -1,5 +1,6 @@
 package com.example.carfixapplication
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -22,13 +23,13 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // 1. Находим все наши View-компоненты по их ID
+        // 1. Все наши View-компоненты по их ID
         fullnameEditText = findViewById(R.id.fullnameEditText)
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         continueButton = findViewById(R.id.continueButton)
 
-        // 2. Устанавливаем слушатель нажатия на кнопку "Продолжить"
+        // 2. Слушатель нажатия на кнопку "Продолжить"
         continueButton.setOnClickListener {
             // Вызываем функцию, которая выполнит регистрацию
             performRegistration()
@@ -48,28 +49,41 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         // 5. Создаем объект с данными для отправки на сервер
-        val request =
-            ApiService.RegistrationRequest(fullname = fullname, email = email, password = password)
+        val request = ApiService.RegistrationRequest(fullname = fullname, email = email, password = password)
 
         // 6. Вызываем API-метод
-        RetrofitClient.api.registerUser(request).enqueue(object : Callback<ApiService.RegistrationResponse> {
+        RetrofitClient.api.registerUser(request).enqueue(object :
+            Callback<ApiService.RegistrationResponse> {
 
-            override fun onResponse(call: Call<ApiService.RegistrationResponse>, response: Response<ApiService.RegistrationResponse>) {
+            override fun onResponse(
+                call: Call<ApiService.RegistrationResponse>,
+                response: Response<ApiService.RegistrationResponse>
+            ) {
                 if (response.isSuccessful) {
                     // Сервер успешно обработал запрос
-                    Toast.makeText(this@RegisterActivity, "Регистрация прошла успешно!", Toast.LENGTH_LONG).show()
-                    // Закрываем экран регистрации и возвращаемся на предыдущий (экран входа)
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Регистрация прошла успешно!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    // Закрываем экран регистрации и возвращаемся на экран входа
                     finish()
                 } else {
                     // Сервер вернул ошибку (например, email уже занят)
-                    val errorMsg = response.errorBody()?.string() ?: "Неизвестная ошибка регистрации"
-                    Toast.makeText(this@RegisterActivity, "Ошибка: $errorMsg", Toast.LENGTH_LONG).show()
+                    val errorMsg =
+                        response.errorBody()?.string() ?: "Неизвестная ошибка регистрации"
+                    Toast.makeText(this@RegisterActivity, "Ошибка: $errorMsg", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
 
             override fun onFailure(call: Call<ApiService.RegistrationResponse>, t: Throwable) {
                 // Ошибка сети (нет интернета, сервер недоступен)
-                Toast.makeText(this@RegisterActivity, "Ошибка сети: ${t.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@RegisterActivity,
+                    "Ошибка сети: ${t.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         })
     }

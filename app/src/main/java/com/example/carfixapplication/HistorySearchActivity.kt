@@ -54,16 +54,11 @@ class HistorySearchActivity : AppCompatActivity() {
 
     // 3. Метод для первоначальной настройки RecyclerView
     private fun setupRecyclerView() {
-        // После selectedOrder обязательно должна быть стрелка ->
         ordersAdapter = OrdersAdapter(emptyList()) { selectedOrder ->
             val intent = Intent(this, OrderDetailsActivity::class.java)
             intent.putExtra("ORDER_DATA", selectedOrder)
             startActivity(intent)
         }
-
-        // Убедись, что binding.main — это именно RecyclerView в XML.
-        // Если в XML id у RecyclerView другой (например, recyclerViewOrders),
-        // используй binding.recyclerViewOrders.apply
         binding.main.apply {
             adapter = ordersAdapter
             layoutManager = LinearLayoutManager(this@HistorySearchActivity)

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -36,11 +37,10 @@ class SettingsActivity : AppCompatActivity() {
 // Находим ListView
         l = findViewById(R.id.polzovatel_information)
 
-// Один адаптер
+// адаптер
         val arr = ArrayAdapter(this, android.R.layout.simple_list_item_1, tutorials)
         l.adapter = arr
 
-// Один setOnItemClickListener
         l.setOnItemClickListener { _, _, position, _ ->
             when (position) {
 
@@ -65,7 +65,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
-        val buttonClick = findViewById<Button>(R.id.back_button2)
+        val buttonClick = findViewById<ImageButton>(R.id.back_button2)
         buttonClick.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

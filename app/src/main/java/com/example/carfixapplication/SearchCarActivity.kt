@@ -30,7 +30,7 @@ class SearchCarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search_car)
 
         // 2. Находим View-элементы, теперь ищем ListView
-        listView = findViewById(R.id.listView)
+        listView = findViewById(R.id.searchResultsRecyclerView)
         userData = findViewById(R.id.user_data)
         saveButton = findViewById(R.id.button)
         backButton = findViewById(R.id.Back_button)

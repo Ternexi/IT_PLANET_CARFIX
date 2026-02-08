@@ -1,5 +1,6 @@
 package com.example.carfixapplication.api
 
+import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -40,26 +41,29 @@ interface ApiService {
     data class RegistrationRequest(
         val fullname: String,
         val email: String,
-        val password: String
+        val password: String,
     )
 
     data class RegistrationResponse(
-        val message: String
+        val message: String,
     )
 
     @POST("login")
     fun loginUser(@Body loginData: LoginRequest): Call<LoginResponse>
-
     data class LoginRequest(
         val email: String,
-        val password: String
+        val password: String,
     )
 
 
     data class LoginResponse(
         val token: String,
-        val message: String
+        val message: String,
     )
+
+
+
+
     @GET("orders/{id}") // Предполагаемый путь к API. Замените на ваш, если он другой.
     fun getOrderDetail(@Path("id") orderId: Int): Call<Order>
 }

@@ -8,6 +8,7 @@ android {
     namespace = "com.example.carfixapplication"
     compileSdk = 34
 
+    // ViewBinding должен быть здесь, и только здесь
     buildFeatures {
         viewBinding = true
     }
@@ -18,6 +19,11 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        // Это важно для старых версий Android, чтобы они могли работать с векторной графикой
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -37,18 +43,20 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
-    buildFeatures{
-        viewBinding = true
-    }
+        // Лишний блок buildFeatures отсюда УБРАН
     }
 }
 
 dependencies {
+    // Зависимости для базовых компонентов Android
+    implementation("androidx.core:core-ktx:1.12.0") // Обновил core-ktx для совместимости
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.activity:activity-ktx:1.8.2")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4") // Вернул стабильную версию
+    implementation("androidx.recyclerview:recyclerview:1.3.2") // Обновил recyclerview
+
+    // Material Design - ОДИН РАЗ
+    implementation("com.google.android.material:material:1.11.0")
 
     // Retrofit для сетевых запросов
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -65,11 +73,4 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
-    // ВАЖНО: Неверная зависимость viewbinding:8.13.1 удалена.
-    // Если ViewBinding нужен, он включается по-другому (см. Шаг 3).
 }
-
-
-
-

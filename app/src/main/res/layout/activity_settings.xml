@@ -7,27 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".SettingsActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/back_button2"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#F8AD6B"
-        app:icon="@drawable/outline_arrow_back_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.044"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="52dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Назад"
+        android:src="@drawable/back_strelka"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.054" />
+        app:tint="#596F62" />
 
     <TextView
         android:id="@+id/main_label3"
         android:layout_width="wrap_content"
         android:layout_height="31dp"
         android:text="Настройки"
-        android:textColor="#000000"
+        android:textColor="#566C64"
         android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

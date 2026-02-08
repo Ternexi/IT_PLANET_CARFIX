@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,19 +10,20 @@
     tools:context=".MainActivity">
 
     <!-- === НЕВИДИМЫЕ НАПРАВЛЯЮЩИЕ (GUIDELINES) === -->
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.12" />
+        app:layout_constraintGuide_percent="0.07021063" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.78" />
+        app:layout_constraintGuide_percent="0.73" />
 
     <!-- === ВЕРХНИЙ БЛОК: Заголовок, Номер, Настройки === -->
     <com.google.android.material.button.MaterialButton
@@ -30,26 +32,31 @@
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:foreground="?attr/selectableItemBackground"
         android:text="Premium"
         android:textAllCaps="false"
+        android:textColor="#566C64"
         android:textSize="14sp"
-        android:textColor="#0B0B0B"
-        android:foreground="?attr/selectableItemBackground"
 
-
-        app:icon="@drawable/ic_star"
-        app:iconPadding="6dp"
-        app:iconTint="#FFA95C"
-
-        app:strokeColor="#FFA95C"
-        app:strokeWidth="1.5dp"
-        app:cornerRadius="20dp"
 
         app:backgroundTint="@android:color/transparent"
+        app:cornerRadius="20dp"
+        app:icon="@drawable/frame__5_"
 
+        app:iconPadding="6dp"
+        app:iconTint="#566C64"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:strokeColor="#566C64"
+        app:strokeWidth="1.5dp" />
+
+    <!-- === АДАПТИВНЫЙ БЛОК ДЛЯ СКРЫТЫХ ДЕФЕКТОВ И СУММЫ === -->
+
+    <!-- Поле для "Скрытые дефекты" -->
+
+    <!-- Поле для "Итоговая сумма" -->
 
 
     <TextView
@@ -59,7 +66,7 @@
         android:layout_marginHorizontal="8dp"
         android:gravity="center"
         android:text="Номер не выбран"
-        android:textColor="#333333"
+        android:textColor="#566C64"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/premiumButton"
         app:layout_constraintEnd_toStartOf="@+id/settings_buton"
@@ -68,18 +75,21 @@
 
     <ImageButton
         android:id="@+id/settings_buton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:rotation="-34"
-        android:src="@drawable/black__4"
+        android:src="@drawable/frame"
         app:layout_constraintBottom_toBottomOf="@+id/premiumButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/premiumButton"
         tools:ignore="ContentDescription" />
 
     <!-- === ЦЕНТРАЛЬНЫЙ БЛОК: Модель машины === -->
+
+    <!-- === ПОЛЯ ВВОДА === -->
+
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="0dp"
@@ -90,11 +100,11 @@
         android:src="@drawable/car_model"
         app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline_top"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="ContentDescription" />
-
-    <!-- === ПОЛЯ ВВОДА === -->
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/bamper1_input"
@@ -305,40 +315,25 @@
         app:layout_constraintHorizontal_bias="0.285"
         app:layout_constraintWidth_percent="0.12"
         app:layout_constraintHeight_percent="0.08"/>
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/front_porog_left1_input"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="20dp"
+        android:layout_height="207dp"
         android:background="@android:color/transparent"
+        android:gravity="center"
         android:inputType="number"
         android:textColor="#000000"
         android:textSize="12sp"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/imageButton"
         app:layout_constraintEnd_toEndOf="@+id/imageButton"
+        app:layout_constraintHeight_percent="0.127"
+        app:layout_constraintHorizontal_bias="0.088"
         app:layout_constraintStart_toStartOf="@+id/imageButton"
         app:layout_constraintTop_toTopOf="@+id/imageButton"
-        app:layout_constraintVertical_bias="0.4"
-        app:layout_constraintHorizontal_bias="0.089"
-        app:layout_constraintWidth_percent="0.04"
-        app:layout_constraintHeight_percent="0.127"/>
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/back_porog_left1_input"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        android:inputType="number"
-        android:textColor="#000000"
-        android:textSize="12sp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-        app:layout_constraintEnd_toEndOf="@+id/imageButton"
-        app:layout_constraintStart_toStartOf="@+id/imageButton"
-        app:layout_constraintTop_toTopOf="@+id/imageButton"
-        app:layout_constraintVertical_bias="0.58"
-        app:layout_constraintHorizontal_bias="0.089"
-        app:layout_constraintWidth_percent="0.04"
-        app:layout_constraintHeight_percent="0.081"/>
+        app:layout_constraintVertical_bias="0.471"
+        app:layout_constraintWidth_percent="0.04" />
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/back_crilo_left_input"
         android:layout_width="0dp"
@@ -393,23 +388,25 @@
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintWidth_percent="0.12"
         app:layout_constraintHeight_percent="0.127"/>
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/front_porog_right1_input"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="207dp"
         android:background="@android:color/transparent"
+        android:gravity="center"
         android:inputType="number"
         android:textColor="#000000"
         android:textSize="12sp"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/imageButton"
         app:layout_constraintEnd_toEndOf="@+id/imageButton"
+        app:layout_constraintHeight_percent="0.127"
+        app:layout_constraintHorizontal_bias="0.907"
         app:layout_constraintStart_toStartOf="@+id/imageButton"
         app:layout_constraintTop_toTopOf="@+id/imageButton"
-        app:layout_constraintVertical_bias="0.4"
-        app:layout_constraintHorizontal_bias="0.91"
-        app:layout_constraintWidth_percent="0.04"
-        app:layout_constraintHeight_percent="0.127"/>
+        app:layout_constraintVertical_bias="0.473"
+        app:layout_constraintWidth_percent="0.04" />
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/top_right_window_input1"
         android:layout_width="0dp"
@@ -444,23 +441,7 @@
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintWidth_percent="0.12"
         app:layout_constraintHeight_percent="0.1"/>
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/back_porog_right1_input"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        android:inputType="number"
-        android:textColor="#000000"
-        android:textSize="12sp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-        app:layout_constraintEnd_toEndOf="@+id/imageButton"
-        app:layout_constraintStart_toStartOf="@+id/imageButton"
-        app:layout_constraintTop_toTopOf="@+id/imageButton"
-        app:layout_constraintVertical_bias="0.59"
-        app:layout_constraintHorizontal_bias="0.910"
-        app:layout_constraintWidth_percent="0.04"
-        app:layout_constraintHeight_percent="0.081"/>
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/top_right_window_input2"
         android:layout_width="0dp"
@@ -513,59 +494,185 @@
         app:layout_constraintWidth_percent="0.12"
         app:layout_constraintHeight_percent="0.07"/>
 
+    <!-- =================================================================== -->
+    <!-- === НИЖНИЙ БЛОК (ФИНАЛЬНАЯ ВЕРСИЯ, КОТОРАЯ ВЫГЛЯДИТ ПРАВИЛЬНО) === -->
+    <!-- =================================================================== -->
 
-
-    <!-- === НИЖНИЙ БЛОК: Кнопки === -->
-    <Button
-        android:id="@+id/Search_history"
+    <!-- 1. Контейнер для трех кнопок. Он прижат к низу. -->
+    <LinearLayout
+        android:id="@+id/bottom_buttons_container"
         android:layout_width="0dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="#FFA95C"
-        android:text="Подсчет суммы ремонта"
-        android:textColor="#0B0B0B"
+        android:baselineAligned="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="16dp"
-        android:elevation="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/Search_history"
-        app:layout_constraintStart_toStartOf="@+id/Search_history"
-        app:layout_constraintTop_toTopOf="@+id/Search_history"
-        app:srcCompat="@drawable/calculator"
-        tools:ignore="ContentDescription" />
+        <!-- КНОПКА 1: Ввести номер -->
+        <LinearLayout
+            android:id="@+id/Search_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp">
 
-    <Button
-        android:id="@+id/Search_number"
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/shape_rounded_button_dark"
+                android:scaleType="centerInside"
+                android:padding="14dp"
+                app:srcCompat="@drawable/input_number"
+                app:tint="#B7D4CC"
+                android:contentDescription="@null"/>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Ввести номер автомобиля"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textColor="#555555"/>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent"/>
+
+        <!-- КНОПКА 2: Подсчет -->
+        <LinearLayout
+            android:id="@+id/Search_history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/shape_rounded_button_dark"
+                android:scaleType="centerInside"
+                android:padding="14dp"
+                app:srcCompat="@drawable/calculator_svg"
+                app:tint="#B7D4CC"
+                android:contentDescription="@null"/>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Подсчет суммы ремонта"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textColor="#555555"/>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent"/>
+
+        <!-- КНОПКА 3: Поиск -->
+        <LinearLayout
+            android:id="@+id/Search_history_real"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/shape_rounded_button_dark"
+                android:scaleType="centerInside"
+                android:padding="14dp"
+                app:srcCompat="@drawable/search_svg"
+                app:tint="#B7D4CC"
+                android:contentDescription="@null"/>
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Поиск по истории"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textColor="#555555"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 2. Поля для ввода дефектов -->
+    <EditText
+        android:id="@+id/hidden_defects_input_left"
         android:layout_width="0dp"
-        android:layout_height="59dp"
+        android:layout_height="50dp"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="#FFA95C"
-        android:text="Введите номер автомобиля"
-        android:textColor="#FA020202"
-        app:layout_constraintBottom_toTopOf="@+id/Search_history"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/shape_rounded_input_light"
+        android:gravity="center"
+        android:hint="Дефект"
+        android:inputType="text"
+        android:paddingHorizontal="16dp"
+        android:textColorHint="#8A000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_buttons_container"
+        app:layout_constraintEnd_toStartOf="@+id/hidden_defects_input_right"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="16dp"
-        android:elevation="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/Search_number"
-        app:layout_constraintStart_toStartOf="@+id/Search_number"
-        app:layout_constraintTop_toTopOf="@+id/Search_number"
-        app:srcCompat="@drawable/edit_note"
-        tools:ignore="ContentDescription" />
+    <EditText
+        android:id="@+id/hidden_defects_input_right"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/shape_rounded_input_light"
+        android:gravity="center"
+        android:hint="Стоимость"
+        android:inputType="number"
+        android:paddingHorizontal="16dp"
+        android:textColorHint="#8A000000"
+        android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="@+id/hidden_defects_input_left"
+        app:layout_constraintBottom_toBottomOf="@+id/hidden_defects_input_left"
+        app:layout_constraintStart_toEndOf="@+id/hidden_defects_input_left"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 3. Надпись "скрытые дефекты" -->
+    <TextView
+        android:id="@+id/hidden_defects_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="скрытые дефекты"
+        android:textColor="#585555"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/hidden_defects_input_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

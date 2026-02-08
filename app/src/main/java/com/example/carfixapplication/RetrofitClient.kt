@@ -1,3 +1,4 @@
+// Файл: RetrofitClient.kt
 package com.example.carfixapplication.api
 
 import okhttp3.OkHttpClient
@@ -7,22 +8,25 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://10.191.247.130:3000/"
+    private const val BASE_URL = "http://192.168.31.238:3000/"
 
-    // Логгер, чтобы ты видел в Logcat все ответы сервера
+    // Логгер
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
+
+    // OkHttpClient который включает  логгер и перехватчик токена
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
+        .addInterceptor(AuthInterceptor()) // Перехватчик
+        .addInterceptor(loggingInterceptor) // Логгер лучше ставить после, чтобы видеть финальный запрос
         .build()
 
-    // Инициализация API
+
     val api: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(okHttpClient)
+            .client(okHttpClient) // <--- Используем наш OkHttpClient с токеном
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)

@@ -13,7 +13,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="8dp"
-        android:src="@mipmap/car_fix_logo_black2"
+        android:src="@mipmap/black_new"
         app:layout_constraintBottom_toTopOf="@+id/logoText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -48,54 +48,23 @@
         app:layout_constraintTop_toBottomOf="@id/logoText" />
 
     <!-- Кнопка "Войти с Google" (пока просто верстка) -->
-    <TextView
-        android:id="@+id/googleSignInButton"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="48dp"
-        android:background="@drawable/shape_dark_input_field"
-        android:drawablePadding="16dp"
-        android:gravity="center_vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:text="Войти с помощью Google"
-        android:textColor="@color/dark_text_primary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        android:layout_marginHorizontal="24dp"/>
 
     <!-- Кнопка "Войти с Apple" (пока просто верстка) -->
-    <TextView
-        android:id="@+id/appleSignInButton"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/shape_dark_input_field"
-        android:drawablePadding="16dp"
-        android:gravity="center_vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:text="Войти с помощью Apple"
-        android:textColor="@color/dark_text_primary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/googleSignInButton"
-        android:layout_marginHorizontal="24dp"/>
 
     <!-- Заголовок "Email address" -->
+
+    <!-- Поле для ввода Email -->
     <TextView
         android:id="@+id/emailLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginStart="4dp"
         android:text="Адрес электронной почты"
         android:textColor="@color/dark_text_secondary"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/emailEditText"
-        app:layout_constraintTop_toBottomOf="@id/appleSignInButton" />
+        tools:layout_editor_absoluteY="283dp" />
 
-    <!-- Поле для ввода Email -->
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="0dp"
@@ -152,32 +121,36 @@
         android:layout_marginHorizontal="24dp"/>
 
     <!-- Кнопка "Sign In" -->
+
+    <!-- Текст "Don't have an account? Sign Up" -->
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signInButton"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/shape_orange_button"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/black_new_background"
         android:text="Войти"
         android:textAllCaps="false"
         android:textColor="@color/dark_text_primary"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/signUpText"
+        app:layout_constraintBottom_toTopOf="@id/singUp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginHorizontal="24dp"/>
+        app:layout_constraintHorizontal_bias="0.583"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Текст "Don't have an account? Sign Up" -->
     <Button
-        android:id="@+id/signUpText"
+        android:id="@+id/singUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="92dp"
         android:background="@android:color/transparent"
         android:text="Нет аккаунта? Зарегистрироваться"
         android:textColor="@color/dark_text_secondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

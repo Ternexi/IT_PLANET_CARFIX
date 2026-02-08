@@ -27,7 +27,9 @@ class OrdersAdapter(
 
         val info = String.format(template, order.id, formattedData, order.cost)
 
-        holder.binding.orderInfoText.text = info
+        holder.binding.carNumberTextView.text = "Номер: ${order.car_number}"
+        holder.binding.orderDateTextView.text = "Дата: ${order.time}"
+        holder.binding.orderCostTextView.text = "Стоимость: ${order.cost} руб."
 
 
         // Устанавливаем обработчик клика
