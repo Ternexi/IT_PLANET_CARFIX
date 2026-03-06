@@ -25,6 +25,13 @@
             android:paddingTop="8dp"
             android:text="Номер авто:"
             android:textSize="18sp" />
+        <TextView
+            android:id="@+id/orderPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:text="Телефон: ---"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/orderTime"

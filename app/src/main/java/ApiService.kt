@@ -1,70 +1,63 @@
 package com.example.carfixapplication.api
 
-import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Query
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
-    /**
-     * Поиск заказов по номеру машины.
-     */
+    // ПОИСК ПО ИСТОРИИ
     @GET("orders/search")
     suspend fun getOrdersByCarNumber(
         @Query("carNumber") carNumber: String
-    ): Response<List<Order>>
+    ): retrofit2.Response<List<Order>> // Возвращает список заказов
 
-    /**
-     * Создание или поиск машины.
-     */
+
+    // РАБОТА С МАШИНАМИ И ЗАКАЗАМИ
     @POST("cars")
-    fun createCar(@Body request: CarRequest): Call<Car>
+    suspend fun createCar(
+        @Body request: CarRequest
+    ): retrofit2.Response<Car> // Возвращает созданную машину
 
-    /**
-     * Создание нового заказа.
-     */
     @POST("orders")
-    fun createOrder(@Body request: NewOrderRequest): Call<NewOrderResponse>
+    fun createOrder(
+        @Body request: NewOrderRequest
+    ): Call<NewOrderResponse> // Возвращает статус и ID нового заказа
 
+
+    // Просто получить вообще все заказы для конкретного пользователя
     @GET("orders")
-    fun getOrders(): Call<List<Order>>
+    suspend fun getOrders(
+        @Query("user_id") userId: Int
+    ): retrofit2.Response<List<Order>>
 
+
+    // Получить детали конкретного заказа по его ID
+    @GET("orders/{id}")
+    fun getOrderDetail(
+        // @Path -> Заменяет {id} в ссылке на реальное число (например: orders/55)
+        @Path("id") orderId: Int
+    ): Call<Order>
+
+    @GET("orders/recent")
+    suspend fun getRecentOrders(): Response<List<Order>>
+
+
+
+
+    // БЛОК АВТОРИЗАЦИИ
 
     @POST("register")
-    fun registerUser(@Body registrationData: RegistrationRequest): Call<RegistrationResponse>
-
-    data class RegistrationRequest(
-        val fullname: String,
-        val email: String,
-        val password: String,
-    )
-
-    data class RegistrationResponse(
-        val message: String,
-    )
+    fun registerUser(
+        @Body registrationData: RegistrationRequest
+    ): Call<RegistrationResponse>
 
     @POST("login")
-    fun loginUser(@Body loginData: LoginRequest): Call<LoginResponse>
-    data class LoginRequest(
-        val email: String,
-        val password: String,
-    )
-
-
-    data class LoginResponse(
-        val token: String,
-        val message: String,
-    )
-
-
-
-
-    @GET("orders/{id}") // Предполагаемый путь к API. Замените на ваш, если он другой.
-    fun getOrderDetail(@Path("id") orderId: Int): Call<Order>
+    fun loginUser(
+        @Body loginData: LoginRequest
+    ): Call<LoginResponse>
 }
-

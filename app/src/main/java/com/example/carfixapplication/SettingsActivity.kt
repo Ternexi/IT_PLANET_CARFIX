@@ -18,46 +18,41 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        // Обработка системных отступов
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Список пунктов
         val tutorials = arrayOf(
-            "О нас",
+            "Профиль",
             "Пользовательское соглашение",
             "О приложении",
             "CarFix Premium",
             "Поиск по истории"
         )
 
-// Находим ListView
         l = findViewById(R.id.polzovatel_information)
 
-// адаптер
         val arr = ArrayAdapter(this, android.R.layout.simple_list_item_1, tutorials)
         l.adapter = arr
 
         l.setOnItemClickListener { _, _, position, _ ->
             when (position) {
 
-                0 -> { /* О нас */ }
+                0 -> { val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent) }
 
-                1 -> { /* Пользовательское соглашение */ }
+                1 -> {  }
 
-                2 -> { /* О приложении */ }
+                2 -> { }
 
                 3 -> {
-                    // Переход в Premium
                     val intent = Intent(this, PremiumActivity::class.java)
                     startActivity(intent)
                 }
 
                 4 -> {
-                    // Переход в Поиск по истории
                     val intent = Intent(this, HistorySearchActivity::class.java)
                     startActivity(intent)
                 }

@@ -13,8 +13,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.carfixapplication.api.*
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -58,19 +60,16 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
-        // Обновляем номер, если вернулись с экрана поиска
         if (isUserLoggedIn()) {
             displayCurrentCarNumber()
         }
     }
 
     private fun initializeViews() {
-        // Кнопка Premium
         findViewById<Button>(R.id.premiumButton).setOnClickListener {
             startActivity(Intent(this, PremiumActivity::class.java))
         }
 
-        // Основные кнопки
         searchNumberButton = findViewById(R.id.Search_number)
         search_history_real = findViewById(R.id.Search_history_real)
         settingsButton = findViewById(R.id.settings_buton)
@@ -81,7 +80,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        // ИНИЦИАЛИЗАЦИЯ ПОЛЕЙ ВВОДА
         val fieldsToMap = listOf(
             R.id.bamper1_input to "Передний бампер",
             R.id.capot_input to "Капот",
@@ -106,10 +104,11 @@ class MainActivity : AppCompatActivity() {
             R.id.top_right_window_input3 to "Правая задняя форточка"
         )
 
+
+        // не понял
         inputFields = fieldsToMap.mapNotNull { (id, name) ->
             val field = findViewById<TextInputEditText>(id)
             if (field == null) {
-                // Если поле не найдено, выводим ошибку в лог, чтобы сразу это увидеть!
                 Log.e("MainActivity", "View with ID '$id' ($name) not found!")
                 null
             } else {
@@ -149,27 +148,41 @@ class MainActivity : AppCompatActivity() {
         return regex.matches(number)
     }
 
-    private fun createCarAndGetId(carNumber: String, onResult: (Int?) -> Unit) {
+    private suspend fun createCarAndGetId(carNumber: String): Int? {
         if (!isValidRussianNumber(carNumber)) {
-            Toast.makeText(this, "Номер введен некорректно! Используйте только русские буквы.", Toast.LENGTH_SHORT).show()
-            onResult(null)
-            return
+            Log.e("CAR_DEBUG", "Номер $carNumber не прошел проверку регулярным выражением!")
+
+            Toast.makeText(this, "Неверный формат номера", Toast.LENGTH_SHORT).show()
+            return null
         }
-        val carRequestBody = CarRequest(car_number = carNumber)
-        RetrofitClient.api.createCar(carRequestBody).enqueue(object : Callback<Car> {
-            override fun onResponse(call: Call<Car>, response: Response<Car>) {
-                if (response.isSuccessful && response.body() != null) {
-                    onResult(response.body()!!.id_car)
+
+        val realPhone = LocalCache.getPhone(this)
+
+        return try {
+            Log.d("CAR_DEBUG", "Отправляем запрос на сервер для номера: $carNumber, ${realPhone}e")
+
+            val response = RetrofitClient.api.createCar(CarRequest(carNumber, realPhone))
+
+            // 3. Анализируем ответ
+            if (response.isSuccessful) {
+                val carResponse = response.body()
+                Log.d("CAR_DEBUG", "Сервер ответил успешно: $carResponse")
+
+                if (carResponse != null && carResponse.id_car != 0) {
+                    carResponse.id_car
                 } else {
-                    Toast.makeText(this@MainActivity, "Не удалось создать/найти машину. Код: ${response.code()}", Toast.LENGTH_SHORT).show()
-                    onResult(null)
+                    Log.e("CAR_DEBUG", "Успех, но id_car пустой или равен 0! Проверь модель Car.")
+                    null
                 }
+            } else {
+                val errorBody = response.errorBody()?.string()
+                Log.e("CAR_DEBUG", "Ошибка сервера: код ${response.code()}, текст: $errorBody")
+                null
             }
-            override fun onFailure(call: Call<Car>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
-                onResult(null)
-            }
-        })
+        } catch (e: Exception) {
+            Log.e("CAR_DEBUG", "Сбой сети или парсинга: ${e.message}", e)
+            null
+        }
     }
 
     private fun displayCurrentCarNumber() {
@@ -177,6 +190,9 @@ class MainActivity : AppCompatActivity() {
         carNumberDisplay.text = if (carNumber.isEmpty()) "Номер не выбран" else "Выбранный номер: $carNumber"
     }
 
+
+
+    // НЕ понятно скореее всего не работает
     private fun getUserIdFromToken(): Int? {
         val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val token = prefs.getString("USER_TOKEN", null) ?: return null
@@ -208,6 +224,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         var totalSum = 0
+
         val repairItemsList = mutableListOf<RepairItem>()
         var hasInput = false
 
@@ -225,17 +242,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 1. Список для скрытых дефектов
         val defectsList = mutableListOf<HiddenDefect>()
 
-        // 2. Получаем значения из полей EditText
         val hiddenDefectName = hiddenDefectNameInput.text.toString().trim()
         val hiddenDefectCostText = hiddenDefectCostInput.text.toString().trim()
 
-        // 3. Проверяем, есть ли данные о скрытом дефекте, и добавляем их в список
         var hiddenDefectCost = 0
+
         if (hiddenDefectName.isNotEmpty() || hiddenDefectCostText.isNotEmpty()) {
-            // Если хотя бы одно поле заполнено, проверяем оба
+
             val cost = hiddenDefectCostText.toIntOrNull()
             if (hiddenDefectName.isEmpty() || cost == null) {
                 Toast.makeText(this, "Для скрытого дефекта должны быть заполнены и название, и стоимость.", Toast.LENGTH_LONG).show()
@@ -243,32 +258,32 @@ class MainActivity : AppCompatActivity() {
             }
             hiddenDefectCost = cost
             defectsList.add(HiddenDefect(description = hiddenDefectName, cost = cost))
-            hasInput = true // Если есть скрытый дефект, значит ввод был
+            hasInput = true
         }
 
-        // Проверяем, было ли введено хоть что-то
         if (!hasInput) {
             Toast.makeText(this, "Заполните хотя бы одно поле!", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Считаем итоговую сумму
         val finalTotalSum = totalSum + hiddenDefectCost
 
-        createCarAndGetId(carNumber) { carId ->
+        // не понятно коруины
+        lifecycleScope.launch{
+         val carId = createCarAndGetId(carNumber)
             if (carId != null) {
-                // 4. Создаем тело запроса (используя список)
+
                 val requestBody = NewOrderRequest(
                     id_car = carId,
                     id_user = userId,
                     order_cost = finalTotalSum,
                     repair_items = repairItemsList,
-                    hidden_defects = if (defectsList.isNotEmpty()) defectsList else null // Передаем список
+                    hidden_defects = if (defectsList.isNotEmpty()) defectsList else null
                 )
 
                 sendOrderToApi(requestBody)
             } else {
-                Toast.makeText(this, "Ошибка идентификации автомобиля.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Ошибка идентификации автомобиля.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -276,9 +291,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendOrderToApi(request: NewOrderRequest) {
         RetrofitClient.api.createOrder(request).enqueue(object : Callback<NewOrderResponse> {
+
             override fun onResponse(call: Call<NewOrderResponse>, response: Response<NewOrderResponse>) {
                 if (response.isSuccessful && response.body() != null) {
-                    val orderId = response.body()!!.order.id_order
+                    val orderId = response.body()?.id_order
                     Toast.makeText(this@MainActivity, "Заказ #$orderId создан! Сумма: ${request.order_cost} ₽", Toast.LENGTH_LONG).show()
                     LocalCache.clearNumber(this@MainActivity)
                     displayCurrentCarNumber()

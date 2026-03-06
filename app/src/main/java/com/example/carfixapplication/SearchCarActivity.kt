@@ -2,113 +2,98 @@ package com.example.carfixapplication
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter // <-- Возвращаем ArrayAdapter
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ListView // <-- Возвращаем ListView
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.carfixapplication.api.Order
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.carfixapplication.api.RetrofitClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
 
 class SearchCarActivity : AppCompatActivity() {
 
-    // 1. Возвращаем старые типы переменных
-    private lateinit var listView: ListView
-    private lateinit var userData: EditText
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var ordersAdapter: OrdersAdapter
+    private lateinit var userDataInput: EditText
+
+    private lateinit var phoneDataInput: EditText
+
     private lateinit var saveButton: Button
-    private lateinit var backButton: Button
-    private lateinit var adapter: ArrayAdapter<Order> // Используем простой ArrayAdapter
+    private lateinit var backButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_car)
 
-        // 2. Находим View-элементы, теперь ищем ListView
-        listView = findViewById(R.id.searchResultsRecyclerView)
-        userData = findViewById(R.id.user_data)
+        recyclerView = findViewById(R.id.searchResultsRecyclerView)
+        userDataInput = findViewById(R.id.user_data)
+        phoneDataInput = findViewById(R.id.phone_data)
         saveButton = findViewById(R.id.button)
-        backButton = findViewById(R.id.Back_button)
+        backButton = findViewById(R.id.Back_buttoni)
 
-        // 3. Настраиваем отступы
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        setupRecyclerView()
 
-        // 4. Возвращаем старую настройку адаптера
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, mutableListOf<Order>())
-        listView.adapter = adapter
+        loadRecentOrders()
 
-        // 5. Загружаем данные из сети
-        loadHistory()
+        backButton.setOnClickListener { finish() }
 
-        // 6. Настраиваем слушателей для кнопок
         saveButton.setOnClickListener {
-            val text = userData.text.toString().trim().uppercase()
-            if (text.isNotEmpty()) {
-                saveAndReturn(text)
+            val carNumber = userDataInput.text.toString().trim().uppercase()
+            val phoneNumber = phoneDataInput.text.toString().trim().uppercase()
+
+
+            if (carNumber.isNotEmpty() || phoneNumber.isNotEmpty()) {
+                selectCarAndExit(carNumber, phoneNumber)
             } else {
-                Toast.makeText(this, "Введите номер автомобиля", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Введите номер", Toast.LENGTH_SHORT).show()
             }
         }
+    }
 
-        backButton.setOnClickListener {
-            finish()
-        }
-
-        // 7. Исправленный обработчик клика для ListView
-        listView.setOnItemClickListener { _, _, position, _ ->
-            val selectedOrder = adapter.getItem(position)
-            if (selectedOrder != null) {
-
-                // Создаем "посылку" и кладем в нее данные по частям,
-                // используя правильные ключи, которые ожидает OrderDetailsActivity
-                val intent = Intent(this, OrderDetailsActivity::class.java).apply {
-                    putExtra("EXTRA_ORDER_ID", selectedOrder.id)
-                    putExtra("EXTRA_ORDER_TIME", selectedOrder.time)
-                    putExtra("EXTRA_ORDER_COST", selectedOrder.cost)
-                    putExtra("EXTRA_CAR_NUMBER", selectedOrder.car_number)
-                }
-                startActivity(intent)
+    private fun setupRecyclerView() {
+        ordersAdapter = OrdersAdapter(emptyList()) { selectedOrder ->
+            val intent = Intent(this, OrderDetailsActivity::class.java).apply {
+                putExtra(OrderDetailsActivity.EXTRA_ORDER_ID, selectedOrder.id)
+                putExtra("EXTRA_CAR_NUMBER", selectedOrder.car_number)
+                putExtra("EXTRA_ORDER_COST", selectedOrder.cost)
+                putExtra("EXTRA_ORDER_TIME", selectedOrder.time)
+                putExtra("EXTRA_PHONE_NUMBER", selectedOrder.phone_number)
             }
+            startActivity(intent)
         }
-
+        recyclerView.apply {
+            adapter = ordersAdapter
+            layoutManager = LinearLayoutManager(this@SearchCarActivity)
+        }
     }
 
-    private fun saveAndReturn(carNumber: String) {
-        LocalCache.saveNumber(this, carNumber)
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun loadHistory() {
-        RetrofitClient.api.getOrders().enqueue(object : Callback<List<Order>> {
-            override fun onResponse(call: Call<List<Order>>, response: Response<List<Order>>) {
-                if (isFinishing || isDestroyed) return
+    private fun loadRecentOrders() {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.api.getRecentOrders()
                 if (response.isSuccessful) {
-                    val ordersList = response.body() ?: emptyList()
-                    // Возвращаем старый способ обновления данных
-                    adapter.clear()
-                    adapter.addAll(ordersList)
-                } else {
-                    val errorMsg = response.errorBody()?.string() ?: "Неизвестная ошибка"
-                    Toast.makeText(this@SearchCarActivity, "Ошибка сервера: $errorMsg", Toast.LENGTH_LONG).show()
+                    val recentOrders = response.body() ?: emptyList()
+                    ordersAdapter.updateOrders(recentOrders)
+                }else{
+                    Log.e("SearchCar", "Сервер ответил ошибкой: ${response.code()}")
                 }
+            } catch (e: Exception) {
+                Log.e("SearchCar", "Ошибка загрузки недавних: ${e.message}")
             }
+        }
+    }
 
-            override fun onFailure(call: Call<List<Order>>, t: Throwable) {
-                if (isFinishing || isDestroyed) return
-                Toast.makeText(this@SearchCarActivity, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+    private fun selectCarAndExit(carNumber: String, phoneNumber: String) {
+        LocalCache.saveNumber(this, carNumber)
+        LocalCache.savePhone(this, phoneNumber)
+
+
+        Toast.makeText(this, "Номер $carNumber выбран", Toast.LENGTH_SHORT).show()
+
+        finish()
     }
 }

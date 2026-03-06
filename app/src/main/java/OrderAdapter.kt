@@ -20,33 +20,25 @@ class OrdersAdapter(
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = orders[position]
-        val context = holder.itemView.context
-        val template = context.getString(R.string.order_list_item_format)
 
         val formattedData = formatApiDate(order.time)
 
-        val info = String.format(template, order.id, formattedData, order.cost)
-
         holder.binding.carNumberTextView.text = "Номер: ${order.car_number}"
-        holder.binding.orderDateTextView.text = "Дата: ${order.time}"
+
+        holder.binding.orderDateTextView.text = "Дата: $formattedData"
+
         holder.binding.orderCostTextView.text = "Стоимость: ${order.cost} руб."
 
-
-        // Устанавливаем обработчик клика
-        holder.itemView.setOnClickListener {
-            onItemClick(order)
-        }
+        holder.itemView.setOnClickListener { onItemClick(order) }
     }
 
 
-    //сообщает RecyclerView, сколько всего элементов в списке.
 
     override fun getItemCount() = orders.size
 
-    //вспомогательный метод для обновления данных в адаптере.
 
     fun updateOrders(newOrders: List<Order>) {
         orders = newOrders
-        notifyDataSetChanged() // Эта команда обновляет отображаемый список
+        notifyDataSetChanged()
     }
 }

@@ -12,24 +12,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.carfixapplication.api.RetrofitClient
 import com.example.carfixapplication.databinding.ActivityHistorySearchBinding
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class HistorySearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHistorySearchBinding
-    private lateinit var ordersAdapter: OrdersAdapter // 1. Объявляем адаптер
+    private lateinit var ordersAdapter: OrdersAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHistorySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupRecyclerView() // 2. Вызываем настройку RecyclerView
+        setupRecyclerView()
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
 
         binding.backButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -52,14 +54,25 @@ class HistorySearchActivity : AppCompatActivity() {
         })
     }
 
-    // 3. Метод для первоначальной настройки RecyclerView
     private fun setupRecyclerView() {
         ordersAdapter = OrdersAdapter(emptyList()) { selectedOrder ->
-            val intent = Intent(this, OrderDetailsActivity::class.java)
-            intent.putExtra("ORDER_DATA", selectedOrder)
+
+            val intent = Intent(this, OrderDetailsActivity::class.java).apply {
+
+
+                putExtra(OrderDetailsActivity.EXTRA_ORDER_ID, selectedOrder.id)
+
+                putExtra("EXTRA_ORDER_TIME", selectedOrder.time)
+                putExtra("EXTRA_ORDER_COST", selectedOrder.cost)
+                putExtra("EXTRA_CAR_NUMBER", selectedOrder.car_number)
+                putExtra("EXTRA_PHONE_NUMBER", selectedOrder.phone_number)
+
+            }
+
             startActivity(intent)
         }
-        binding.main.apply {
+
+        binding.recyclerViewHistory.apply {
             adapter = ordersAdapter
             layoutManager = LinearLayoutManager(this@HistorySearchActivity)
         }
@@ -73,27 +86,32 @@ class HistorySearchActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.api.getOrdersByCarNumber(carNumber)
+                Log.d("HISTORY_DEBUG", "Ответ от сервера: ${response.code()}")
 
                 if (response.isSuccessful) {
                     val orders = response.body()
+                    Log.d("HISTORY_DEBUG", "Список заказов: $orders")
+
                     if (orders != null && orders.isNotEmpty()) {
-                        Log.d("SearchHistory", "Успешно! Найдено заказов: ${orders.size}")
-                        // 4. ПЕРЕДАЕМ ДАННЫЕ В АДАПТЕР для отображения
+                        Log.d("HISTORY_DEBUG", "ID первого заказа: ${orders[0].id}")
                         ordersAdapter.updateOrders(orders)
                     } else {
-                        Log.d("SearchHistory", "Заказы для номера $carNumber не найдены.")
-                        ordersAdapter.updateOrders(emptyList()) // Очищаем список, если ничего не найдено
+                        Log.d("HISTORY_DEBUG", "Сервер вернул пустой список")
+
+                        ordersAdapter.updateOrders(emptyList())
                         Toast.makeText(this@HistorySearchActivity, "Ничего не найдено", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Log.e("SearchHistory", "Ошибка от сервера: ${response.code()}")
-                    ordersAdapter.updateOrders(emptyList()) // Очищаем список при ошибке
+
+                    val errorMsg = response.errorBody()?.string()
+                    Log.e("HISTORY_DEBUG", "Ошибка сервера: $errorMsg")
+                    ordersAdapter.updateOrders(emptyList())
                     Toast.makeText(this@HistorySearchActivity, "Ошибка сервера: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
 
             } catch (e: Exception) {
-                Log.e("SearchHistory", "Ошибка сети или выполнения запроса", e)
-                ordersAdapter.updateOrders(emptyList()) // Очищаем список при ошибке
+                Log.e("HISTORY_DEBUG", "Сбой при поиске: ${e.message}", e)
+                ordersAdapter.updateOrders(emptyList())
                 Toast.makeText(this@HistorySearchActivity, "Ошибка сети", Toast.LENGTH_SHORT).show()
             }
         }

@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.carfixapplication.api.ApiService
+import com.example.carfixapplication.api.*
 import com.example.carfixapplication.api.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,13 +26,11 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // 1. Находим View-элементы по их ID
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         loginButton = findViewById(R.id.signInButton)
         goToRegisterButton = findViewById(R.id.singUp)
 
-        // 2. Устанавливаем слушатель на кнопку "Войти"
         loginButton.setOnClickListener {
             performLogin()
         }
@@ -51,16 +50,24 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        val loginRequest = ApiService.LoginRequest(email = email, password = password)
+        val loginRequest = LoginRequest(email = email, password = password)
 
-        RetrofitClient.api.loginUser(loginRequest).enqueue(object : Callback<ApiService.LoginResponse> {
-            override fun onResponse(call: Call<ApiService.LoginResponse>, response: Response<ApiService.LoginResponse>) {
+        RetrofitClient.api.loginUser(loginRequest).enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
                     val token = loginResponse?.token
 
-                    if (token != null) {
-                        saveAuthToken(token)
+                    if (loginResponse != null && loginResponse.user != null) {
+
+                        val token = loginResponse.token
+                        val id = loginResponse.user.id
+                        val name = loginResponse.user.name
+                        val email = loginResponse.user.email
+
+                        saveUserData(token, id, name, email)
+
+
                         Toast.makeText(this@LoginActivity, "Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
                         goToMainActivity()
                     } else {
@@ -71,15 +78,21 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<ApiService.LoginResponse>, t: Throwable) {
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 Toast.makeText(this@LoginActivity, "Ошибка сети: ${t.message}", Toast.LENGTH_LONG).show()
             }
         })
     }
 
-    private fun saveAuthToken(token: String) {
+    private fun saveUserData(token: String, id: Int, name: String, email: String) {
         val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-        prefs.edit().putString("USER_TOKEN", token).apply()
+        prefs.edit().apply{
+            putString("USER_TOKEN", token)
+            putInt("USER_ID", id)
+            putString("USER_NAME", name)
+            putString("USER_EMAIL", email)
+            apply()
+        }
     }
     private fun goToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)

@@ -10,25 +10,18 @@ object RetrofitClient {
 
     private const val BASE_URL = "http://192.168.31.238:3000/"
 
+
     // Логгер
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
 
-    // OkHttpClient который включает  логгер и перехватчик токена
-    private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(AuthInterceptor()) // Перехватчик
-        .addInterceptor(loggingInterceptor) // Логгер лучше ставить после, чтобы видеть финальный запрос
-        .build()
+    // OkHttpClient логгер и перехватчик токена
+    private val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).addInterceptor(loggingInterceptor).build()
 
 
     val api: ApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient) // <--- Используем наш OkHttpClient с токеном
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiService::class.java)
+        Retrofit.Builder().baseUrl(BASE_URL).client(okHttpClient).addConverterFactory(GsonConverterFactory.create()).build().create(ApiService::class.java)
     }
 }

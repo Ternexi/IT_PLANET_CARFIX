@@ -1,70 +1,121 @@
 package com.example.carfixapplication.api
 
-import android.os.Build
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+
 @Parcelize
 data class RepairItem(
-    val name: String,
-    val price: Int
-) : Parcelable
+    val name: String,   // Название детали (например, "Бампер")
+    val price: Int      // Цена
+) : Parcelable          // Обязательная метка для упаковки
 
-// Класс для описания скрытого дефекта
-@Parcelize // <--- ДОБАВЬТЕ ЭТУ АННОТАЦИЮ
+@Parcelize
 data class HiddenDefect(
-    @SerializedName("description")
-    val description: String,
+    @SerializedName("description") // Имя поля в JSON от сервера
+    val description: String,       // Имя поля  в коде
+
     @SerializedName("cost")
     val cost: Int
-) : Parcelable // <--- И УНАСЛЕДУЙТЕ ОТ PARCELABLE
+) : Parcelable
 
 @Parcelize
 data class Order(
+    // Сервер присылает "id_order" переименовываем его просто в "id"
     @SerializedName("id_order") val id: Int,
-    @SerializedName("car_number") val car_number: String?,
-    @SerializedName("order_time") val time: String?,
-    @SerializedName("order_cost") val cost: Int,
+
+    // Блок для отображения в шаблоне
+    @SerializedName("car_number") val car_number: String?, // Номер
+    @SerializedName("order_time") val time: String?, // Время
+    @SerializedName("order_cost") val cost: Int, // Цена
+    @SerializedName("phone_number") val phone_number: String?, //Номер клиента
+
+    // Список скрытых дефектов (может быть null, если их нет)
     @SerializedName("hidden_defects")
     val hidden_defects: List<HiddenDefect>?,
+
     val description: String? = "Детали в разработке",
+
+    // Список ремонтных работ
     val repair_items: List<RepairItem>?
 ) : Parcelable
 
 
-// 2. Добавляем недостающие модели для ApiService:
+// *** АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ ***
 
-// Для запроса создания/поиска машины
+
+
+// То, что отправляем при регистрации
+data class RegistrationRequest(
+    val fullname: String,
+    val email: String,
+    val password: String
+)
+
+// Ответ сервера после регистрации
+data class RegistrationResponse(
+    val message: String
+)
+
+
+// *** СОЗДАНИЕ МАШИН И ЗАКАЗОВ ***
+
+// Запрос на создание машины
 data class CarRequest(
-    val car_number: String
+    val car_number: String,
+    @SerializedName("phone_number") val phone_number: String
 )
 
-// Ответ от сервера с данными машины
+// Ответ с данными машины
 data class Car(
-    @SerializedName("id_car")
-    val id_car: Int,
-    @SerializedName("car_number")
-    val car_number: String
+    @SerializedName("id_car") val id_car: Int, // id
+    @SerializedName("car_number") val car_number: String // Номер машины
 )
 
-// Для создания нового заказа
+// Данные для НОВОГО заказа (отправляем на сервер)
 data class NewOrderRequest(
-    val id_car: Int,
-    val id_user: Int,
-    val order_cost: Int,
-    @SerializedName("hidden_defects") // Важно, чтобы имя совпадало с ожидаемым
+    val id_car: Int, // id
+    val id_user: Int, // id аккаунта
+    val order_cost: Int, // Стоимость ремонта
+
+    @SerializedName("hidden_defects")
     val hidden_defects: List<HiddenDefect>?,
-    val repair_items: List<RepairItem>,
 
-    )
+    val repair_items: List<RepairItem>
+)
 
-// Ответ при создании заказа
+// Ответ сервера после создания заказа
 data class NewOrderResponse(
     val status: String,
-    val order: OrderDetails
+    val id_order: Int,
 )
 
+// Вспомогательный класс для ID созданного заказа (костыли)
 data class OrderDetails(
     val id_order: Int
 )
+
+data class LoginRequest(
+    val email: String,
+    val password: String
+)
+
+// То, что сервер отвечает при входе
+data class LoginResponse(
+    val token: String,  // Наш пропуск (JWT)
+    val message: String, // Сообщение (например, "Успешно")
+    val user: UserData
+)
+
+data class UserData(
+    @SerializedName("id_user") val id: Int,
+    @SerializedName("fullname") val name: String,
+    val email: String
+)
+
+data class CarResponse(
+    val id_car: Int,
+    val car_number: String
+)
+

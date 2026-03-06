@@ -11,7 +11,7 @@
 
 
     <ImageButton
-        android:id="@+id/Back_button"
+        android:id="@+id/Back_buttoni"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
@@ -40,7 +40,7 @@
         android:id="@+id/user_data"
         android:layout_width="249dp"
         android:layout_height="58dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="72dp"
         android:backgroundTint="#566C64"
         android:ems="10"
         android:hint="A777AA77..."
@@ -51,22 +51,12 @@
         android:textColorHint="#566C64"
         android:textColorLink="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_label" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button"
-        style="@style/Widget.Material3.Button.Icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        app:backgroundTint="#566C64"
-        app:cornerRadius="28dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_data" />
 
-<!--    <ListView-->
+    <!--    <ListView-->
 <!--        android:id="@+id/listView"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="400dp"-->
@@ -83,6 +73,36 @@
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/button" />-->
 
+    <EditText
+        android:id="@+id/phone_data"
+        android:layout_width="249dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#566C64"
+        android:ems="10"
+        android:hint="+7(999) 999..."
+        android:inputType="text"
+        android:shadowColor="#1F1A1A"
+        android:textColor="#0D0D0D"
+        android:textColorHighlight="#181818"
+        android:textColorHint="#566C64"
+        android:textColorLink="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_data" />
+
+    <Button
+        android:id="@+id/button"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="#566C64"
+        app:cornerRadius="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone_data" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
@@ -96,14 +116,14 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultsRecyclerView"
-        android:layout_width="433dp"
+        android:layout_width="0dp"
         android:layout_height="650dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button"
-        app:layout_constraintVertical_bias="0.225"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/item_order" />
 
     <!-- ... -->

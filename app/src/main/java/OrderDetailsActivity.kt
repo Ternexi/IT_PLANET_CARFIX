@@ -1,5 +1,6 @@
 package com.example.carfixapplication
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,20 +15,36 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.TimeZone
 
-// Вспомогательная функция для форматирования даты
+
 fun formatApiDate(isoDate: String?): String {
-    if (isoDate == null) return "Не указана"
-    return try {
-        val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-        val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-        val date = parser.parse(isoDate)
-        if (date != null) formatter.format(date) else isoDate
-    } catch (e: Exception) {
-        isoDate
-    }
-}
+    if (isoDate.isNullOrBlank()) return "Не указана"
 
+    val formatsToTry = listOf(
+        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        "yyyy-MM-dd'T'HH:mm:ss'Z'",
+        "yyyy-MM-dd'T'HH:mm"
+    )
+
+    for (formatString in formatsToTry) {
+        try {
+            val parser = SimpleDateFormat(formatString, Locale.getDefault())
+            parser.timeZone = TimeZone.getTimeZone("UTC")
+
+            val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+
+            val date = parser.parse(isoDate)
+            if (date != null) {
+                return formatter.format(date)
+            }
+        } catch (e: Exception) {
+            continue
+        }
+    }
+
+    return isoDate
+}
 class OrderDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOrderDetailsBinding
@@ -37,10 +54,12 @@ class OrderDetailsActivity : AppCompatActivity() {
         binding = ActivityOrderDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val orderId = intent.getIntExtra("EXTRA_ORDER_ID", -1)
+        val orderId = intent.getIntExtra(EXTRA_ORDER_ID, -1)
         val orderTime = intent.getStringExtra("EXTRA_ORDER_TIME")
         val orderCost = intent.getIntExtra("EXTRA_ORDER_COST", 0)
-        val carNumber = intent.getStringExtra("EXTRA_CAR_NUMBER") ?: "---"
+        val carNumber = intent.getStringExtra("EXTRA_CAR_NUMBER")
+        val rawPhone = intent.getStringExtra("EXTRA_PHONE_NUMBER")
+        val phoneNumber = if (rawPhone.isNullOrBlank()) "---" else rawPhone
 
         if (orderId == -1) {
             Toast.makeText(this, "Ошибка: ID заказа не получен", Toast.LENGTH_SHORT).show()
@@ -48,19 +67,17 @@ class OrderDetailsActivity : AppCompatActivity() {
             return
         }
 
-        // Установка базовой информации
         binding.orderIdDetails.text = "Заказ №$orderId"
         binding.orderCarNumber.text = "Номер: $carNumber"
+        binding.orderPhoneNumber.text = "Тел: $phoneNumber"
         binding.orderTime.text = "Дата: ${formatApiDate(orderTime)}"
         binding.orderCost.text = "Итого к оплате: $orderCost р."
         binding.zapchasti.text = "Загрузка деталей..."
 
-        // Скрываем все поля для дефектов, пока не получим данные
         binding.hiddenDefect.visibility = View.GONE
         binding.hiddenDefectName.visibility = View.GONE
         binding.hiddenDefectCostValue.visibility = View.GONE
 
-        // Запрос полных деталей
         fetchOrderDetails(orderId, orderCost)
     }
 
@@ -71,41 +88,64 @@ class OrderDetailsActivity : AppCompatActivity() {
     private fun fetchOrderDetails(orderId: Int, initialCost: Int) {
         RetrofitClient.api.getOrderDetail(orderId).enqueue(object : Callback<Order> {
             override fun onResponse(call: Call<Order>, response: Response<Order>) {
+
                 if (response.isSuccessful) {
                     val fullOrder = response.body()
 
-                    // Обновляем список основных работ/запчастей
+                    if (!fullOrder?.phone_number.isNullOrBlank()) {
+                        val phone = fullOrder?.phone_number ?: ""
+                        binding.orderPhoneNumber.text = "Тел: $phone"
+
+                        binding.orderPhoneNumber.setOnClickListener {
+                            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                            val clip = android.content.ClipData.newPlainText("phone", phone)
+                            clipboard.setPrimaryClip(clip)
+
+                            Toast.makeText(this@OrderDetailsActivity, "Номер $phone скопирован", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    if (!fullOrder?.phone_number.isNullOrBlank()) {
+                        binding.orderPhoneNumber.text = "Тел: ${fullOrder?.phone_number}"
+                    } else {
+                        binding.orderPhoneNumber.text = "Тел: ---"
+                    }
+
+                    Log.d("CHECK_DATA", "Пришло с сервера: $fullOrder")
+                    Log.d("CHECK_DATA", "Телефон внутри объекта: ${fullOrder?.phone_number}")
+                    Log.d("DEBUG_ORDER", "Дефектов пришло: ${fullOrder?.hidden_defects?.size}")
+
+                    if (!fullOrder?.phone_number.isNullOrEmpty()) {
+                        binding.orderPhoneNumber.text = "Тел: ${fullOrder?.phone_number}"
+                    }
+
                     val itemsString = fullOrder?.repair_items?.joinToString("\n") {
                         " • ${it.name}: ${it.price} р."
                     } ?: "Детали не указаны"
                     binding.zapchasti.text = itemsString
 
-                    // *** ГЛАВНОЕ ИСПРАВЛЕНИЕ - работаем с вашими ID из XML ***
-                    // Проверяем, есть ли скрытые дефекты
                     if (fullOrder?.hidden_defects != null && fullOrder.hidden_defects.isNotEmpty()) {
-                        // Формируем строку из всех дефектов (даже если их несколько)
                         val defectsDescription = fullOrder.hidden_defects.joinToString("\n") {
                             " • ${it.description}"
                         }
                         val defectsTotalCost = fullOrder.hidden_defects.sumOf { it.cost }
 
-                        // Заполняем поля данными
                         binding.hiddenDefectName.text = defectsDescription
                         binding.hiddenDefectCostValue.text = "Стоимость доп. работ: $defectsTotalCost р."
 
-                        // Делаем блок видимым
                         binding.hiddenDefect.visibility = View.VISIBLE
                         binding.hiddenDefectName.visibility = View.VISIBLE
                         binding.hiddenDefectCostValue.visibility = View.VISIBLE
                     }
 
-                    // Обновляем итоговую стоимость
                     val totalCost = fullOrder?.cost ?: initialCost
                     binding.orderCost.text = "Итого к оплате: ${totalCost} р."
 
                 } else {
                     binding.zapchasti.text = "Не удалось загрузить детали"
                     Log.e("API_ERROR", "Сервер ответил ошибкой: ${response.code()}")
+
+
                 }
             }
 
