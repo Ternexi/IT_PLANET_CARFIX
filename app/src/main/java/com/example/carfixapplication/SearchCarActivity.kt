@@ -1,5 +1,6 @@
 package com.example.carfixapplication
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -36,17 +37,17 @@ class SearchCarActivity : AppCompatActivity() {
         backButton = findViewById(R.id.Back_buttoni)
 
         setupRecyclerView()
-
+        setupPhoneFormatting()
         loadRecentOrders()
 
         backButton.setOnClickListener { finish() }
 
         saveButton.setOnClickListener {
             val carNumber = userDataInput.text.toString().trim().uppercase()
-            val phoneNumber = phoneDataInput.text.toString().trim().uppercase()
+            val phoneNumber = phoneDataInput.text.toString().trim()
 
 
-            if (carNumber.isNotEmpty() || phoneNumber.isNotEmpty()) {
+            if (carNumber.isNotEmpty() || phoneNumber.length > 2) {
                 selectCarAndExit(carNumber, phoneNumber)
             } else {
                 Toast.makeText(this, "Введите номер", Toast.LENGTH_SHORT).show()
@@ -54,7 +55,44 @@ class SearchCarActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupPhoneFormatting() {
+        if (phoneDataInput.text.isEmpty()) {
+            phoneDataInput.setText("+7")
+        }
+
+        phoneDataInput.addTextChangedListener(object : android.text.TextWatcher {
+            override fun afterTextChanged(s: android.text.Editable?) {
+                if (!s.toString().startsWith("+7")) {
+                    phoneDataInput.setText("+7")
+                    phoneDataInput.setSelection(phoneDataInput.text.length)
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Если пользователь пытается поставить курсор в начало (до +7),
+                // перекидываем его в конец при вводе
+                if (phoneDataInput.selectionStart < 2) {
+                    phoneDataInput.setSelection(phoneDataInput.text.length)
+                }
+            }
+        })
+
+        // Обработка клика: если пользователь кликнул в начало строки, переносим курсор в конец
+        phoneDataInput.setOnClickListener {
+            if (phoneDataInput.selectionStart < 2) {
+                phoneDataInput.setSelection(phoneDataInput.text.length)
+            }
+        }
+    }
+
+
+
+
     private fun setupRecyclerView() {
+
+
         ordersAdapter = OrdersAdapter(emptyList()) { selectedOrder ->
             val intent = Intent(this, OrderDetailsActivity::class.java).apply {
                 putExtra(OrderDetailsActivity.EXTRA_ORDER_ID, selectedOrder.id)
@@ -72,6 +110,13 @@ class SearchCarActivity : AppCompatActivity() {
     }
 
     private fun loadRecentOrders() {
+        val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val token = prefs.getString("USER_TOKEN", null)
+        if (token == null) {
+            Toast.makeText(this, "Ошибка авторизации. Пожалуйста, войдите заново.", Toast.LENGTH_LONG).show()
+            return
+        }
+
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.api.getRecentOrders()
@@ -86,6 +131,7 @@ class SearchCarActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun selectCarAndExit(carNumber: String, phoneNumber: String) {
         LocalCache.saveNumber(this, carNumber)

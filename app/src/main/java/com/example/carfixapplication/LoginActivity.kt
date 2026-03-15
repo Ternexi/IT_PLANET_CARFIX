@@ -3,13 +3,16 @@ package com.example.carfixapplication
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.carfixapplication.api.ApiService
 import com.example.carfixapplication.api.*
 import com.example.carfixapplication.api.RetrofitClient
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,13 +55,15 @@ class LoginActivity : AppCompatActivity() {
 
         val loginRequest = LoginRequest(email = email, password = password)
 
-        RetrofitClient.api.loginUser(loginRequest).enqueue(object : Callback<LoginResponse> {
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+        lifecycleScope.launch {
+            try {
+
+                val response = RetrofitClient.api.loginUser(loginRequest)
+
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
-                    val token = loginResponse?.token
 
-                    if (loginResponse != null && loginResponse.user != null) {
+                    if (loginResponse?.token != null && loginResponse.user != null) {
 
                         val token = loginResponse.token
                         val id = loginResponse.user.id
@@ -76,19 +81,19 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this@LoginActivity, "Ошибка: неверный email или пароль", Toast.LENGTH_LONG).show()
                 }
-            }
+            }catch (e: Exception) {
+                Log.e("API_ERROR", e.message ?: "Ошибка сети")
+                Toast.makeText(this@LoginActivity, "Ошибка сети: ${e.message}", Toast.LENGTH_LONG).show()
 
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, "Ошибка сети: ${t.message}", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
-    private fun saveUserData(token: String, id: Int, name: String, email: String) {
+    private fun saveUserData(token: String, id: String, name: String, email: String) {
         val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         prefs.edit().apply{
             putString("USER_TOKEN", token)
-            putInt("USER_ID", id)
+            putString("USER_ID", id)
             putString("USER_NAME", name)
             putString("USER_EMAIL", email)
             apply()

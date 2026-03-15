@@ -1,9 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Базовая тема твоего приложения. -->
-    <style name="Theme.CarFixApplication" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.CarFixApplication" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
-
+        <item name="android:textColorHighlight">#66566C64</item>
+        <item name="colorPrimary">#566C64</item>
     </style>
-    <style name="Theme.CarFixApplication.NoActionBar" parent="Theme.CarFixApplication" />
 
+    <style name="Theme.CarFixApplication" parent="Base.Theme.CarFixApplication">
+        <item name="myListTextColor">#212121</item>
+    </style>
+
+    <style name="Theme.CarFixApplication.NoActionBar" parent="Theme.CarFixApplication" />
 </resources>

@@ -8,7 +8,6 @@
     tools:context=".RegisterActivity">
 
 
-    <!-- Заголовок "Create Account" -->
 
     <ImageView
         android:id="@+id/logoImage"
@@ -35,12 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <!-- Поле для ввода Имени -->
-
-    <!-- Поле для ввода Email -->
-
-    <!-- Поле для ввода Пароля -->
 
     <TextView
         android:id="@+id/titleTextAccent"
@@ -113,13 +106,12 @@
         app:layout_constraintTop_toBottomOf="@id/emailEditText"
         android:layout_marginHorizontal="24dp"/>
 
-    <!-- Кнопка "Continue" -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/continueButton"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginTop="32dp"
-        android:background="#566C64"
+        android:background="@drawable/shape_rounded_button_dark"
         android:text="Продолжить"
         android:textAllCaps="false"
         android:textColor="@color/dark_text_primary"
@@ -129,13 +121,13 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginHorizontal="24dp"/>
 
-    <!-- Текст "Already have an account? Log in" -->
     <Button
-        android:id="@+id/signInText"
+        android:id="@+id/signInButtonRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"
-        android:background="@android:color/transparent"          android:text="Уже есть аккаунт? Войти"
+        android:background="@android:color/transparent"
+        android:text="Уже есть аккаунт? Войти"
         android:textColor="@color/dark_text_secondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,9 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.CarFixApplication" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-        <item name="android:windowFullscreen">true</item>
-
+    <style name="Theme.CarFixApplication" parent="Base.Theme.CarFixApplication">
+        <item name="myListTextColor">#FFFFFF</item>
     </style>
 </resources>

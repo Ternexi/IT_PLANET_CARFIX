@@ -50,7 +50,6 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- Блок для скрытого дефекта -->
         <TextView
             android:id="@+id/hidden_defect"
             android:layout_width="wrap_content"
@@ -81,7 +80,6 @@
             android:visibility="gone"
             tools:text="Стоимость доп. работ: 5000 р."
             tools:visibility="visible" />
-        <!-- Конец блока -->
 
         <TextView
             android:id="@+id/orderCost"
@@ -89,7 +87,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="16dp"
             android:text="Итого к оплате:"
-            android:textColor="@android:color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="20sp"
             android:textStyle="bold" />
 

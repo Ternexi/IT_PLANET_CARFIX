@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.carfixapplication.api.ApiService
 import com.example.carfixapplication.api.RetrofitClient
 import retrofit2.Call
@@ -13,6 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 import com.example.carfixapplication.api.*
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -20,6 +23,9 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var continueButton: Button
+
+    private lateinit var goToLoginButton: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +35,16 @@ class RegisterActivity : AppCompatActivity() {
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         continueButton = findViewById(R.id.continueButton)
+        goToLoginButton = findViewById(R.id.signInButtonRegister)
+
 
         continueButton.setOnClickListener {
             performRegistration()
+        }
+
+        goToLoginButton.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -47,35 +60,23 @@ class RegisterActivity : AppCompatActivity() {
 
         val request = RegistrationRequest(fullname = fullname, email = email, password = password)
 
-        RetrofitClient.api.registerUser(request).enqueue(object :
-            Callback<RegistrationResponse> {
+        lifecycleScope.launch {
+            try {
 
-            override fun onResponse(
-                call: Call<RegistrationResponse>,
-                response: Response<RegistrationResponse>
-            ) {
+                val response = RetrofitClient.api.registerUser(request)
+
                 if (response.isSuccessful) {
-                    Toast.makeText(
-                        this@RegisterActivity,
-                        "Регистрация прошла успешно!",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this@RegisterActivity, "Регистрация прошла успешно!", Toast.LENGTH_LONG).show()
                     finish()
                 } else {
                     val errorMsg =
                         response.errorBody()?.string() ?: "Неизвестная ошибка регистрации"
-                    Toast.makeText(this@RegisterActivity, "Ошибка: $errorMsg", Toast.LENGTH_LONG)
-                        .show()
+                    Toast.makeText(this@RegisterActivity, "Ошибка: $errorMsg", Toast.LENGTH_LONG).show()
                 }
+            } catch (e: Exception) {
+                Toast.makeText(this@RegisterActivity, "Ошибка сети: ${e.message}", Toast.LENGTH_LONG).show()
             }
+        }
 
-            override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
-                Toast.makeText(
-                    this@RegisterActivity,
-                    "Ошибка сети: ${t.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        })
     }
 }

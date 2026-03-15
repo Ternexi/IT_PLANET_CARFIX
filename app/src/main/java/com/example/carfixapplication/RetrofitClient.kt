@@ -1,4 +1,3 @@
-// Файл: RetrofitClient.kt
 package com.example.carfixapplication.api
 
 import okhttp3.OkHttpClient
@@ -8,16 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://192.168.31.238:3000/"
-
-
-    // Логгер
+    private const val BASE_URL = "http://178.72.170.137:8000/"
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
-
-
-    // OkHttpClient логгер и перехватчик токена
     private val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).addInterceptor(loggingInterceptor).build()
 
 

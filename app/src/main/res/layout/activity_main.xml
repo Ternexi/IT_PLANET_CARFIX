@@ -9,7 +9,6 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <!-- === НЕВИДИМЫЕ НАПРАВЛЯЮЩИЕ (GUIDELINES) === -->
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_top"
@@ -25,7 +24,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.73" />
 
-    <!-- === ВЕРХНИЙ БЛОК: Заголовок, Номер, Настройки === -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/premiumButton"
         android:layout_width="wrap_content"
@@ -52,11 +50,6 @@
         app:strokeColor="#566C64"
         app:strokeWidth="1.5dp" />
 
-    <!-- === АДАПТИВНЫЙ БЛОК ДЛЯ СКРЫТЫХ ДЕФЕКТОВ И СУММЫ === -->
-
-    <!-- Поле для "Скрытые дефекты" -->
-
-    <!-- Поле для "Итоговая сумма" -->
 
 
     <TextView
@@ -85,10 +78,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/premiumButton"
         tools:ignore="ContentDescription" />
-
-    <!-- === ЦЕНТРАЛЬНЫЙ БЛОК: Модель машины === -->
-
-    <!-- === ПОЛЯ ВВОДА === -->
 
     <ImageButton
         android:id="@+id/imageButton"
@@ -211,7 +200,6 @@
         app:layout_constraintWidth_percent="0.4"
         app:layout_constraintHeight_percent="0.045"/>
 
-    <!-- === Левая часть машины === -->
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/top_left_window_input1"
         android:layout_width="0dp"
@@ -352,7 +340,7 @@
         app:layout_constraintWidth_percent="0.12"
         app:layout_constraintHeight_percent="0.07"/>
 
-    <!-- === Правая часть машины === -->
+
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/podcrilokRight_Input"
@@ -494,11 +482,7 @@
         app:layout_constraintWidth_percent="0.12"
         app:layout_constraintHeight_percent="0.07"/>
 
-    <!-- =================================================================== -->
-    <!-- === НИЖНИЙ БЛОК (ФИНАЛЬНАЯ ВЕРСИЯ, КОТОРАЯ ВЫГЛЯДИТ ПРАВИЛЬНО) === -->
-    <!-- =================================================================== -->
 
-    <!-- 1. Контейнер для трех кнопок. Он прижат к низу. -->
     <LinearLayout
         android:id="@+id/bottom_buttons_container"
         android:layout_width="0dp"
@@ -512,7 +496,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- КНОПКА 1: Ввести номер -->
         <LinearLayout
             android:id="@+id/Search_number"
             android:layout_width="0dp"
@@ -550,7 +533,6 @@
             android:layout_width="8dp"
             android:layout_height="match_parent"/>
 
-        <!-- КНОПКА 2: Подсчет -->
         <LinearLayout
             android:id="@+id/Search_history"
             android:layout_width="0dp"
@@ -588,7 +570,6 @@
             android:layout_width="8dp"
             android:layout_height="match_parent"/>
 
-        <!-- КНОПКА 3: Поиск -->
         <LinearLayout
             android:id="@+id/Search_history_real"
             android:layout_width="0dp"
@@ -623,9 +604,10 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- 2. Поля для ввода дефектов -->
     <EditText
         android:id="@+id/hidden_defects_input_left"
+        android:textColor="@color/black"
+        android:textColorHint="#B0B0B0"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="24dp"
@@ -636,7 +618,6 @@
         android:hint="Дефект"
         android:inputType="text"
         android:paddingHorizontal="16dp"
-        android:textColorHint="#8A000000"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_buttons_container"
         app:layout_constraintEnd_toStartOf="@+id/hidden_defects_input_right"
@@ -644,7 +625,9 @@
 
     <EditText
         android:id="@+id/hidden_defects_input_right"
+        android:textColor="@color/black"
         android:layout_width="0dp"
+        android:textColorHint="#B0B0B0"
         android:layout_height="50dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/shape_rounded_input_light"
@@ -652,14 +635,12 @@
         android:hint="Стоимость"
         android:inputType="number"
         android:paddingHorizontal="16dp"
-        android:textColorHint="#8A000000"
         android:textSize="14sp"
         app:layout_constraintTop_toTopOf="@+id/hidden_defects_input_left"
         app:layout_constraintBottom_toBottomOf="@+id/hidden_defects_input_left"
         app:layout_constraintStart_toEndOf="@+id/hidden_defects_input_left"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 3. Надпись "скрытые дефекты" -->
     <TextView
         android:id="@+id/hidden_defects_label"
         android:layout_width="wrap_content"

@@ -1,4 +1,3 @@
-// Файл: App.kt
 package com.example.carfixapplication
 
 import android.app.Application

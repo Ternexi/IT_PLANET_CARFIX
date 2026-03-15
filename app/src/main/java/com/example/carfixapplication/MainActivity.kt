@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.Log.e
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -148,10 +149,9 @@ class MainActivity : AppCompatActivity() {
         return regex.matches(number)
     }
 
-    private suspend fun createCarAndGetId(carNumber: String): Int? {
+    private suspend fun createCarAndGetId(carNumber: String): String? {
         if (!isValidRussianNumber(carNumber)) {
-            Log.e("CAR_DEBUG", "Номер $carNumber не прошел проверку регулярным выражением!")
-
+            Log.e("DEBUG_STEP", "Номер $carNumber не прошел проверку!")
             Toast.makeText(this, "Неверный формат номера", Toast.LENGTH_SHORT).show()
             return null
         }
@@ -159,30 +159,35 @@ class MainActivity : AppCompatActivity() {
         val realPhone = LocalCache.getPhone(this)
 
         return try {
-            Log.d("CAR_DEBUG", "Отправляем запрос на сервер для номера: $carNumber, ${realPhone}e")
-
             val response = RetrofitClient.api.createCar(CarRequest(carNumber, realPhone))
 
-            // 3. Анализируем ответ
-            if (response.isSuccessful) {
-                val carResponse = response.body()
-                Log.d("CAR_DEBUG", "Сервер ответил успешно: $carResponse")
+            Log.d("DEBUG_STEP", "1. Ответ /cars получен. Успех: ${response.isSuccessful}, Код: ${response.code()}")
 
-                if (carResponse != null && carResponse.id_car != 0) {
-                    carResponse.id_car
+            if (response.isSuccessful) {
+                val body = response.body()
+                Log.d("DEBUG_STEP", "2. Объект Car после парсинга: $body")
+
+                val carId = body?.id_car
+
+                if (!carId.isNullOrEmpty()) {
+                    Log.d("DEBUG_STEP", "Успешно извлечен ID: $carId")
+                    return carId
                 } else {
-                    Log.e("CAR_DEBUG", "Успех, но id_car пустой или равен 0! Проверь модель Car.")
-                    null
+                    Log.e("DEBUG_STEP", "Ошибка: id_car в ответе пуст. Тело: $body")
+                    return null
                 }
             } else {
-                val errorBody = response.errorBody()?.string()
-                Log.e("CAR_DEBUG", "Ошибка сервера: код ${response.code()}, текст: $errorBody")
-                null
+                // Блок ELSE для неуспешных кодов (400, 500 и т.д.)
+                val errorStr = response.errorBody()?.string()
+                Log.e("DEBUG_STEP", "Ошибка сервера /cars (код ${response.code()}): $errorStr")
+                return null
             }
         } catch (e: Exception) {
-            Log.e("CAR_DEBUG", "Сбой сети или парсинга: ${e.message}", e)
-            null
+            // Блок CATCH для сетевых ошибок или сбоев GSON
+            Log.e("DEBUG_STEP", "КРИТИЧЕСКАЯ ОШИБКА в createCarAndGetId: ${e.message}", e)
+            return null
         }
+
     }
 
     private fun displayCurrentCarNumber() {
@@ -191,28 +196,17 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-    // НЕ понятно скореее всего не работает
-    private fun getUserIdFromToken(): Int? {
-        val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-        val token = prefs.getString("USER_TOKEN", null) ?: return null
-        return try {
-            val parts = token.split(".")
-            if (parts.size != 3) return null
-            val payloadBytes = android.util.Base64.decode(parts[1], android.util.Base64.URL_SAFE)
-            val payloadJson = String(payloadBytes, Charsets.UTF_8)
-            val jsonObject = org.json.JSONObject(payloadJson)
-            jsonObject.getJSONObject("user").getInt("id")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
     private fun startOrderCreationProcess() {
-        val userId = getUserIdFromToken()
-        if (userId == null) {
-            Toast.makeText(this, "Ошибка авторизации. Пожалуйста, войдите заново.", Toast.LENGTH_LONG).show()
+
+        val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val token = prefs.getString("USER_TOKEN", null)
+
+        if (token == null) {
+            Toast.makeText(
+                this,
+                "Ошибка авторизации. Пожалуйста, войдите заново.",
+                Toast.LENGTH_LONG
+            ).show()
             goToLogin()
             return
         }
@@ -234,7 +228,11 @@ class MainActivity : AppCompatActivity() {
                 hasInput = true
                 val price = value.toIntOrNull()
                 if (price == null || price < 0) {
-                    Toast.makeText(this, "Ошибка в поле '$name'. Вводите только числа.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        "Ошибка в поле '$name'. Вводите только числа.",
+                        Toast.LENGTH_LONG
+                    ).show()
                     return
                 }
                 totalSum += price
@@ -242,7 +240,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val defectsList = mutableListOf<HiddenDefect>()
+        val defectsList = mutableListOf<String>()
 
         val hiddenDefectName = hiddenDefectNameInput.text.toString().trim()
         val hiddenDefectCostText = hiddenDefectCostInput.text.toString().trim()
@@ -253,11 +251,15 @@ class MainActivity : AppCompatActivity() {
 
             val cost = hiddenDefectCostText.toIntOrNull()
             if (hiddenDefectName.isEmpty() || cost == null) {
-                Toast.makeText(this, "Для скрытого дефекта должны быть заполнены и название, и стоимость.", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Для скрытого дефекта должны быть заполнены и название, и стоимость.",
+                    Toast.LENGTH_LONG
+                ).show()
                 return
             }
             hiddenDefectCost = cost
-            defectsList.add(HiddenDefect(description = hiddenDefectName, cost = cost))
+            defectsList.add("$hiddenDefectName: $hiddenDefectCostText ₽")
             hasInput = true
         }
 
@@ -269,54 +271,54 @@ class MainActivity : AppCompatActivity() {
         val finalTotalSum = totalSum + hiddenDefectCost
 
         // не понятно коруины
-        lifecycleScope.launch{
-         val carId = createCarAndGetId(carNumber)
-            if (carId != null) {
+        lifecycleScope.launch {
+            try {
+                val carId = createCarAndGetId(carNumber)
+
+                // ЛОГ 4: Проверяем, вернулись ли мы из функции выше
+                Log.d("DEBUG_STEP", "3. Возврат в корутину. carId: $carId")
+
+                if (carId == null) return@launch
 
                 val requestBody = NewOrderRequest(
                     id_car = carId,
-                    id_user = userId,
                     order_cost = finalTotalSum,
                     repair_items = repairItemsList,
-                    hidden_defects = if (defectsList.isNotEmpty()) defectsList else null
+                    hidden_defects = defectsList
                 )
 
-                sendOrderToApi(requestBody)
-            } else {
-                Toast.makeText(this@MainActivity, "Ошибка идентификации автомобиля.", Toast.LENGTH_SHORT).show()
+                Log.d("DEBUG_STEP", "4. Отправка /orders. Тело: $requestBody")
+
+                val response = RetrofitClient.api.createOrder(requestBody)
+
+                Log.d("DEBUG_STEP", "5. Результат /orders: ${response.code()}")
+
+                if (response.isSuccessful) {
+                    Toast.makeText(this@MainActivity, "Заказ успешно создан!", Toast.LENGTH_SHORT).show()
+
+                    clearAllInputFields()
+                    hiddenDefectNameInput.setText("")
+                    hiddenDefectCostInput.setText("")
+
+                    LocalCache.saveNumber(this@MainActivity, "")
+                    displayCurrentCarNumber()
+
+                    Log.d("DEBUG_STEP", "6. Поля очищены, заказ завершен.")
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("DEBUG_STEP", "Ошибка при создании заказа: $errorBody")
+                    Toast.makeText(this@MainActivity, "Ошибка сервера: ${response.code()}", Toast.LENGTH_LONG).show()
+                }
+
+            } catch (e: Exception) {
+                Log.e("DEBUG_STEP", "КРИТИЧЕСКАЯ ОШИБКА в корутине заказа: ${e.message}", e)
+                Toast.makeText(this@MainActivity, "Ошибка сети: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-
-    private fun sendOrderToApi(request: NewOrderRequest) {
-        RetrofitClient.api.createOrder(request).enqueue(object : Callback<NewOrderResponse> {
-
-            override fun onResponse(call: Call<NewOrderResponse>, response: Response<NewOrderResponse>) {
-                if (response.isSuccessful && response.body() != null) {
-                    val orderId = response.body()?.id_order
-                    Toast.makeText(this@MainActivity, "Заказ #$orderId создан! Сумма: ${request.order_cost} ₽", Toast.LENGTH_LONG).show()
-                    LocalCache.clearNumber(this@MainActivity)
-                    displayCurrentCarNumber()
-                    clearAllInputFields()
-                } else if (response.code() == 403) {
-                    Toast.makeText(this@MainActivity, "Лимит бесплатных расчетов исчерпан! Купите Premium.", Toast.LENGTH_LONG).show()
-                    startActivity(Intent(this@MainActivity, PremiumActivity::class.java))
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    Log.e("MainActivity", "Server error: ${response.code()} - $errorBody")
-                    Toast.makeText(this@MainActivity, "Ошибка сервера: ${response.code()}", Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onFailure(call: Call<NewOrderResponse>, t: Throwable) {
-                Log.e("MainActivity", "Network failure", t)
-                Toast.makeText(this@MainActivity, "Ошибка сети: ${t.message}", Toast.LENGTH_LONG).show()
-            }
-        })
-    }
-
-    private fun clearAllInputFields() {
+        private fun clearAllInputFields() {
         inputFields.forEach { (field, _) -> field.setText("") }
     }
 }
+

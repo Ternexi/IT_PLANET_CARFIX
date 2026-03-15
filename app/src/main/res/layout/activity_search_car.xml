@@ -5,8 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:backgroundTint="@color/white"
+    android:background="?android:attr/colorBackground"
     tools:context=".SearchCarActivity">
 
 
@@ -44,10 +43,11 @@
         android:backgroundTint="#566C64"
         android:ems="10"
         android:hint="A777AA77..."
+        android:maxLength="12"
         android:inputType="text"
         android:shadowColor="#1F1A1A"
-        android:textColor="#0D0D0D"
-        android:textColorHighlight="#181818"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHighlight="#66566C64"
         android:textColorHint="#566C64"
         android:textColorLink="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +72,6 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/button" />-->
-
     <EditText
         android:id="@+id/phone_data"
         android:layout_width="249dp"
@@ -83,8 +82,8 @@
         android:hint="+7(999) 999..."
         android:inputType="text"
         android:shadowColor="#1F1A1A"
-        android:textColor="#0D0D0D"
-        android:textColorHighlight="#181818"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHighlight="#66566C64"
         android:textColorHint="#566C64"
         android:textColorLink="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -112,10 +111,10 @@
         app:layout_constraintStart_toStartOf="@+id/button"
         app:layout_constraintTop_toTopOf="@+id/button"
         app:srcCompat="@drawable/plus_svg" />
-    <!-- ... другие элементы вашего layout (кнопки, поле ввода) ... -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultsRecyclerView"
+        android:textColor="?android:attr/textColorPrimary"
         android:layout_width="0dp"
         android:layout_height="650dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -125,9 +124,6 @@
         app:layout_constraintTop_toBottomOf="@+id/button"
         app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/item_order" />
-
-    <!-- ... -->
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

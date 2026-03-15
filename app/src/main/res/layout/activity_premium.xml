@@ -7,33 +7,18 @@
     android:background="@android:color/black"
     tools:context=".PremiumActivity">
 
-    <!-- Кнопка "Подключить", прижатая к низу экрана -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/connect_button"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
-        android:text="Подключить"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="#566C64"
-        app:cornerRadius="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@id/connect_button"
+        app:layout_constraintBottom_toTopOf="@+id/connect_button_month"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,7 +39,7 @@
                     android:id="@+id/logo_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@mipmap/black_new" /> <!-- ЗАМЕНИ НА СВОЮ ИКОНКУ -->
+                    android:src="@mipmap/black_new" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -66,7 +51,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Подзаголовок "Привилегии с CarFix" -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,14 +60,12 @@
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
-            <!-- Горизонтальный контейнер для двух верхних карточек -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
-                <!-- Карточка 1: Неограниченное расширение -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -96,7 +78,7 @@
                         android:id="@+id/icon_clients"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/profile_svg" /> <!-- ЗАМЕНИ НА СВОЮ ИКОНКУ -->
+                        android:src="@drawable/profile_svg" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -122,7 +104,6 @@
                     android:layout_width="16dp"
                     android:layout_height="match_parent" />
 
-                <!-- Карточка 2: Мгновенный доступ -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -158,7 +139,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Карточка 3: Полная автоматизация -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -193,7 +173,6 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <!-- Карточка 4: Тарифы -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -236,6 +215,43 @@
 
         </LinearLayout>
     </ScrollView>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/connect_button"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="Подключить на пол года"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="#566C64"
+        app:cornerRadius="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/connect_button_month"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Подключить на месяц"
+        android:textAllCaps="false"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="#566C64"
+        app:cornerRadius="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/connect_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
     

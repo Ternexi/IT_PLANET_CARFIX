@@ -4,60 +4,56 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
 
-    // ПОИСК ПО ИСТОРИИ
+    // Поиск по истории
     @GET("orders/search")
     suspend fun getOrdersByCarNumber(
         @Query("carNumber") carNumber: String
-    ): retrofit2.Response<List<Order>> // Возвращает список заказов
+    ): Response<List<Order>>
 
-
-    // РАБОТА С МАШИНАМИ И ЗАКАЗАМИ
+    // Работа с машинами и заказами
     @POST("cars")
     suspend fun createCar(
         @Body request: CarRequest
-    ): retrofit2.Response<Car> // Возвращает созданную машину
+    ): Response<Car>
 
     @POST("orders")
-    fun createOrder(
+    suspend fun createOrder(
         @Body request: NewOrderRequest
-    ): Call<NewOrderResponse> // Возвращает статус и ID нового заказа
+    ): Response<NewOrderResponse>
 
 
-    // Просто получить вообще все заказы для конкретного пользователя
+    // Все заказы для конкретного пользователя
     @GET("orders")
     suspend fun getOrders(
-        @Query("user_id") userId: Int
-    ): retrofit2.Response<List<Order>>
+    ): Response<List<Order>>
 
 
-    // Получить детали конкретного заказа по его ID
+    // Получить детали конкретного заказа
     @GET("orders/{id}")
-    fun getOrderDetail(
-        // @Path -> Заменяет {id} в ссылке на реальное число (например: orders/55)
-        @Path("id") orderId: Int
-    ): Call<Order>
+    suspend fun getOrderDetail(
+        @Path("id") orderId: String
+    ): Response<Order>
 
     @GET("orders/recent")
-    suspend fun getRecentOrders(): Response<List<Order>>
+    suspend fun getRecentOrders(
+    ): Response<List<Order>>
 
 
-
-
-    // БЛОК АВТОРИЗАЦИИ
-
+    // Авторизация
     @POST("register")
-    fun registerUser(
-        @Body registrationData: RegistrationRequest
-    ): Call<RegistrationResponse>
+    suspend fun registerUser(
+        @Body data: RegistrationRequest
+    ): Response<RegistrationResponse>
 
     @POST("login")
-    fun loginUser(
-        @Body loginData: LoginRequest
-    ): Call<LoginResponse>
+    suspend fun loginUser(
+        @Body data: LoginRequest
+    ): Response<LoginResponse>
 }

@@ -18,9 +18,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
-    <!-- Заголовок "Sign In" -->
-
     <TextView
         android:id="@+id/logoText"
         android:layout_width="wrap_content"
@@ -46,14 +43,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logoText" />
-
-    <!-- Кнопка "Войти с Google" (пока просто верстка) -->
-
-    <!-- Кнопка "Войти с Apple" (пока просто верстка) -->
-
-    <!-- Заголовок "Email address" -->
-
-    <!-- Поле для ввода Email -->
 
     <TextView
         android:id="@+id/emailLabel"
@@ -88,7 +77,6 @@
         app:layout_constraintTop_toBottomOf="@id/emailLabel"
         android:layout_marginHorizontal="24dp"/>
 
-    <!-- Заголовок "Password" -->
     <TextView
         android:id="@+id/passwordLabel"
         android:layout_width="wrap_content"
@@ -100,7 +88,6 @@
         app:layout_constraintStart_toStartOf="@id/passwordEditText"
         app:layout_constraintTop_toBottomOf="@id/emailEditText" />
 
-    <!-- Поле для ввода Пароля -->
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="0dp"
@@ -122,17 +109,13 @@
         app:layout_constraintTop_toBottomOf="@id/passwordLabel"
         android:layout_marginHorizontal="24dp"/>
 
-    <!-- Кнопка "Sign In" -->
-
-    <!-- Текст "Don't have an account? Sign Up" -->
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signInButton"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="20dp"
-        android:background="@color/black_new_background"
+        android:background="@drawable/shape_rounded_button_dark"
         android:text="Войти"
         android:textAllCaps="false"
         android:textColor="@color/dark_text_primary"

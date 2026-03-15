@@ -10,34 +10,33 @@
     android:clickable="true"
     android:focusable="true">
 
-    <!-- Текстовое поле для НОМЕРА АВТО -->
     <TextView
         android:id="@+id/carNumberTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/myListTextColor"
         tools:text="Номер: A123AA777" />
 
-    <!-- Текстовое поле для ДАТЫ ЗАКАЗА -->
     <TextView
         android:id="@+id/orderDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:textSize="14sp"
+        android:textColor="?attr/myListTextColor"
         tools:text="Дата: 20.10.2024"
     app:layout_constraintStart_toStartOf="@+id/carNumberTextView"
     app:layout_constraintTop_toBottomOf="@+id/carNumberTextView"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintVertical_bias="0.0"/>
 
-    <!-- Текстовое поле для СТОИМОСТИ -->
     <TextView
         android:id="@+id/orderCostTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="?attr/myListTextColor"
         android:layout_marginTop="8dp"
         android:textSize="16sp"
         android:textStyle="italic"

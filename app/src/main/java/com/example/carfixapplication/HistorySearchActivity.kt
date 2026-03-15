@@ -1,4 +1,5 @@
 package com.example.carfixapplication
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -81,6 +82,16 @@ class HistorySearchActivity : AppCompatActivity() {
 
 
     private fun performSearch(carNumber: String) {
+        val prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val userToken = prefs.getString("USER_TOKEN", null)
+
+        if (userToken == null) {
+            Toast.makeText(this, "Ошибка авторизации. Пожалуйста, войдите заново.", Toast.LENGTH_LONG).show()
+            return
+        }
+
+
+
         Log.d("SearchHistory", "Начинаем поиск для номера: $carNumber")
 
         lifecycleScope.launch {
