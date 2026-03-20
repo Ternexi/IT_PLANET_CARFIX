@@ -96,11 +96,9 @@ class OrderDetailsActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val fullOrder = response.body()
 
-                    // 1. Номер заказа
                     val displayId = fullOrder?.orderNumber?.toString() ?: orderId.take(8)
                     binding.orderIdDetails.text = "Заказ №$displayId"
 
-                    // 2. Телефон (один раз, четко)
                     val phone = fullOrder?.phone_number
                     if (!phone.isNullOrBlank()) {
                         binding.orderPhoneNumber.text = "Тел: $phone"
@@ -114,19 +112,16 @@ class OrderDetailsActivity : AppCompatActivity() {
                         binding.orderPhoneNumber.text = "Тел: ---"
                     }
 
-                    // 3. Запчасти и основные работы
                     val itemsString = fullOrder?.repair_items?.joinToString("\n") {
                         " • ${it.name}: ${it.price} р."
                     } ?: "Детали не указаны"
                     binding.zapchasti.text = itemsString
 
-                    // 4. Скрытые дефекты и расчет их стоимости
                     var defectsTotalCost = 0
                     val numberRegex = Regex("\\d+")
 
                     if (!fullOrder?.hidden_defects.isNullOrEmpty()) {
 
-                        // ШАГ А: Сначала просто считаем математику (forEach)
                         fullOrder?.hidden_defects?.forEach { defectText ->
                             val priceMatch = numberRegex.findAll(defectText).lastOrNull()
                             if (priceMatch != null) {
@@ -134,10 +129,8 @@ class OrderDetailsActivity : AppCompatActivity() {
                             }
                         }
 
-                        // ШАГ Б: Теперь формируем красивый текст для экрана
                         val defectsDescription = fullOrder?.hidden_defects?.joinToString("\n") { " • $it" }
 
-                        // ШАГ В: Выводим всё на UI
                         binding.hiddenDefectName.text = defectsDescription
                         binding.hiddenDefectCostValue.text = "Стоимость доп. работ: $defectsTotalCost р."
 
@@ -150,9 +143,7 @@ class OrderDetailsActivity : AppCompatActivity() {
                         binding.hiddenDefectCostValue.visibility = View.GONE
                     }
 
-                    // 5. ИТОГОВАЯ СУММА (теперь считается всегда!)
-                    val baseCost = fullOrder?.cost ?: initialCost
-                    val finalTotalCost = baseCost + defectsTotalCost
+                    val finalTotalCost = fullOrder?.cost ?: initialCost
                     binding.orderCost.text = "Итого к оплате: $finalTotalCost р."
 
                 } else {

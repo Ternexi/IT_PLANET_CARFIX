@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity() {
             R.id.door_center_left_input2 to "Левая задняя дверь",
             R.id.top_left_window_input2 to "Левое заднее стекло",
             R.id.top_left_window_input3 to "Левая задняя форточка",
+            R.id.top_right_window_input2 to "Правое заднее стекло",
             R.id.podcrilokRight_Input to "Правое переднее крыло",
             R.id.door_center_right_input1 to "Правая передняя дверь",
             R.id.top_right_window_input1 to "Правое переднее стекло",
@@ -106,7 +107,6 @@ class MainActivity : AppCompatActivity() {
         )
 
 
-        // не понял
         inputFields = fieldsToMap.mapNotNull { (id, name) ->
             val field = findViewById<TextInputEditText>(id)
             if (field == null) {
@@ -270,12 +270,10 @@ class MainActivity : AppCompatActivity() {
 
         val finalTotalSum = totalSum + hiddenDefectCost
 
-        // не понятно коруины
         lifecycleScope.launch {
             try {
                 val carId = createCarAndGetId(carNumber)
 
-                // ЛОГ 4: Проверяем, вернулись ли мы из функции выше
                 Log.d("DEBUG_STEP", "3. Возврат в корутину. carId: $carId")
 
                 if (carId == null) return@launch
